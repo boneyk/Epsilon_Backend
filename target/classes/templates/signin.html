@@ -8,7 +8,7 @@
 </head>
 <body>
 	<header>
-			<img id="img_17" src='@{signin/images/image%2017.png}' alt="Epsilon" width="124px" height="98px" title="Epsilon">
+			<img id="img_17" src='@{signin/images/image 17.png}' alt="Epsilon" width="124px" height="98px" title="Epsilon">
 			<p class="text one">
 				<b>
 					<i>
@@ -31,20 +31,20 @@
 		<p class="text four">
 			Для продолжения Вам необходимо войти или зарегистрироваться
 		</p>
-		<form name="vhod" th:method="POST" th:action="@{api/users}" th:object="user">
+		<form name="vhod" th:method="GET" th:action="@{/api/users}" th:object="${user}">
 			<div Class="inform">
 				<div Class="login l">
 					<label>Логин</label> 
 				</div>
 				<div Class="login i">
-					<input Class="i" type="text" name="username">
+					<input Class="i" type="text" name="username" th:field="*{login}">
 				</div>
 	
 				<div Class="password l">
 					<label>Пароль</label> 
 				</div>
 				<div Class="password i">
-					<input Class="i" type="password" name="password">
+					<input Class="i" type="password" name="password" th:field="*{password}">
 				</div>
 			</div>
 			
