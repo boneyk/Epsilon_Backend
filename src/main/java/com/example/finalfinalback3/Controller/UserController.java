@@ -1,5 +1,7 @@
 package com.example.finalfinalback3.Controller;
 
+import com.example.finalfinalback3.DTO.UserAuthDTO;
+import com.example.finalfinalback3.Exceptions.PasswordsNotSameException;
 import com.example.finalfinalback3.Exceptions.UserAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.UserNotFoundException;
 import com.example.finalfinalback3.Repository.UserRepository;
@@ -17,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
     @Autowired
@@ -34,30 +36,31 @@ public class UserController {
             String redirectUrl = "/main"; // URL новой страницы
             HttpHeaders headers = new HttpHeaders();
             headers.add("Location", redirectUrl);
+
             return new ResponseEntity(headers, HttpStatus.FOUND);
 
             //model.addAttribute("user", userService.registration(user));
             //return ResponseEntity.ok("main");
         }
-        catch (UserAlreadyExistsException e){
+        catch (UserAlreadyExistsException | PasswordsNotSameException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         catch (Exception e){
-            return ResponseEntity.badRequest().body("Технические шоколадки");
+            return ResponseEntity.badRequest().body(e.getStackTrace());
         }
     }
 
 
     @GetMapping
-    public ResponseEntity getSingleUser(@RequestParam Integer id){
+    public ResponseEntity authUser(@ModelAttribute("user") UserAuthDTO user){
         try{
-            return ResponseEntity.ok(userService.getSingleUser(id));
+            return ResponseEntity.ok(userService.authUser(user));
         }
         catch (UserNotFoundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         catch (Exception e){
-            return ResponseEntity.badRequest().body("Технические шоколаки");
+            return ResponseEntity.badRequest().body(e.getStackTrace());
         }
     }
 

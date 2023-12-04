@@ -1,19 +1,22 @@
 package com.example.finalfinalback3.Controller;
 
+import com.example.finalfinalback3.DTO.UserAuthDTO;
 import com.example.finalfinalback3.Entity.UserEntity;
 import com.example.finalfinalback3.Service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @Controller
 public class WebController {
 
-    UserService userService;
+    //private final String VIEW_COUNT = "VIEW_COUNT";
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("user", new UserEntity());
@@ -26,20 +29,22 @@ public class WebController {
     }
 
     @GetMapping("/signin")
-    public String signin(Model model){
-        model.addAttribute("user", new UserEntity());
-        try {
-            return "signin";
-        }
-        catch (Exception e){
-            return "";
-        }
+    public String signin(Model model) {
+        model.addAttribute("user", new UserAuthDTO());
+        return "signin";
     }
+//    @GetMapping("/guest")
+//    public String guestGreeting(){
+//        return "guestGreeting";
+//    }
 
     @GetMapping("/main")
-    public String main(Model model){
+    public String main(Model model, Principal principal, HttpSession session){
         try {
-            model.addAttribute("user_list", Arrays.asList(userService.showAll()));
+            //incrimentCount(session, VIEW_COUNT);
+            //model.addAttribute("user_info", principal);
+            //model.addAttribute("user_visit", session.getAttribute(VIEW_COUNT));
+            //model.addAttribute("user_list", Arrays.asList(userService.showAll()));
             return "main";
         }
         catch (Exception e){
@@ -47,6 +52,10 @@ public class WebController {
         }
     }
 
+    private void incrimentCount(HttpSession session, String attr) {
+        var attr_count = session.getAttribute(attr) == null ? 0 : (Integer) session.getAttribute(attr);
+        session.setAttribute(attr, attr_count + 1);
+    }
 
 
 }

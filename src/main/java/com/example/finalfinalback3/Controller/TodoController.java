@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/todo")
+@RequestMapping("/api/todo")
 public class TodoController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class TodoController {
             return ResponseEntity.badRequest().body("Технические шоколадки");
         }
     }
-
+	//Что-то
     @PutMapping()
     public ResponseEntity completeTodo(@RequestParam Integer id){
         try{

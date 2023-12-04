@@ -31,7 +31,7 @@
 		<p class="text four">
 			Осталось совсем чуть-чуть и скоро вы сможете выбрать тур
 		</p>
-		<form name="vhod" th:method="POST" th:action="@{api/users}" th:object="${user}">
+		<form name="vhod" th:method="POST" th:action="@{/api/users}" th:object="${user}">
 			<div Class="inform">
 				<div Class="login l">
 					<label>Логин</label> 
@@ -44,7 +44,7 @@
 					<label>E-mail</label>
 				</div>
 				<div Class="E-mail i">
-					<input Class="i" type="email" name="email">
+					<input Class="i" type="email" name="email" th:field="*{email}">
 				</div>
 	
 				<div Class="password l">
@@ -58,7 +58,7 @@
 					<label>Повторите пароль</label> 
 				</div>
 				<div Class="password i">
-					<input Class="i" type="password" name="confirm_password">
+					<input Class="i" type="password" name="confirm_password" th:field="*{password_confirm}">
 				</div>
 			</div>
 			<div Class="zareg zelenie_ikonki">
