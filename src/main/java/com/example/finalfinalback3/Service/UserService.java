@@ -7,6 +7,7 @@ import com.example.finalfinalback3.Exceptions.UserAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.UserNotFoundException;
 import com.example.finalfinalback3.Model.User;
 import com.example.finalfinalback3.Repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +36,13 @@ public class UserService {
         return User.toModel(userRepo.findById(id).get());
     }
 
-    public Integer authUser(UserAuthDTO user) throws UserNotFoundException,
+
+    public Integer authUser(UserAuthDTO user) throws EntityNotFoundException,
                                                 PasswordsNotSameException{
-        if (userRepo.findByLogin(user.getLogin()) == null){
-            throw new UserNotFoundException("Такого пользователя не существует!");
+        if (userRepo.findByLogin(user.login) == null){
+            throw new EntityNotFoundException("Такого пользователя не существует!");
         }
-        if (!userRepo.findByLogin(user.getLogin()).getPassword().equals(user.getPassword())){
+        if (!userRepo.findByLogin(user.login).getPassword().equals(user.password)){
             throw new PasswordsNotSameException("Неверный пароль!");
         }
         return(userRepo.findByLogin(user.getLogin()).getId());

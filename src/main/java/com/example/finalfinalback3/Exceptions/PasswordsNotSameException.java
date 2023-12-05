@@ -1,6 +1,8 @@
 package com.example.finalfinalback3.Exceptions;
 
-public class PasswordsNotSameException extends Exception{
+import javax.naming.AuthenticationException;
+
+public class PasswordsNotSameException extends AuthenticationException {
     public PasswordsNotSameException(String message) {
         super(message);
     }
