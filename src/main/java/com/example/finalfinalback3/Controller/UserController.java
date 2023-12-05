@@ -7,6 +7,7 @@ import com.example.finalfinalback3.Exceptions.UserNotFoundException;
 import com.example.finalfinalback3.Repository.UserRepository;
 import com.example.finalfinalback3.Service.UserService;
 import com.example.finalfinalback3.Entity.UserEntity;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -56,7 +57,7 @@ public class UserController {
         try{
             return ResponseEntity.ok(userService.authUser(user));
         }
-        catch (UserNotFoundException e){
+        catch (EntityNotFoundException | PasswordsNotSameException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         catch (Exception e){
