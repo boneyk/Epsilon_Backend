@@ -17,35 +17,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepo;
 
-    public UserEntity registration(UserEntity user) throws UserAlreadyExistsException,
-                                                    PasswordsNotSameException {
-            if (userRepo.findByLogin(user.getLogin()) != null) {
-                throw new UserAlreadyExistsException("Пользователь с таким логином уже существует!");
-            }
-            if (!user.getPassword().equals(user.getPassword_confirm())){
-                throw new PasswordsNotSameException("Пароли не совпадают");
-            }
-            return userRepo.save(user);
-    }
-
     //Спросить насчёт использования Optional
     public User getSingleUser(Integer id) throws UserNotFoundException{
         if (userRepo.findById(id).get() == null) {
             throw new UserNotFoundException("Пользователя с таким id не существует!");
         }
         return User.toModel(userRepo.findById(id).get());
-    }
-
-
-    public Integer authUser(UserAuthDTO user) throws EntityNotFoundException,
-                                                PasswordsNotSameException{
-        if (userRepo.findByLogin(user.login) == null){
-            throw new EntityNotFoundException("Такого пользователя не существует!");
-        }
-        if (!userRepo.findByLogin(user.login).getPassword().equals(user.password)){
-            throw new PasswordsNotSameException("Неверный пароль!");
-        }
-        return(userRepo.findByLogin(user.getLogin()).getId());
     }
 
     public Integer deleteUser(Integer id){

@@ -9,8 +9,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +26,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests((request) -> request
+//                        .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+//                        .requestMatchers(new AntPathRequestMatcher("/api/auth")).permitAll()
+//                        .requestMatchers(new AntPathRequestMatcher("/registration")).permitAll()
+//                        .requestMatchers(new AntPathRequestMatcher("/signin/**")).permitAll()
+//                        .requestMatchers(new AntPathRequestMatcher("/registration/**")).permitAll()
                         .anyRequest().permitAll())
+                .formLogin((form) -> form
+                        .loginProcessingUrl("/api/auth").permitAll()
+                        .loginPage("/signin").permitAll()
+                        .defaultSuccessUrl("/main"))
                 .build();
     }
 
@@ -38,5 +50,10 @@ public class SecurityConfig {
 
         return new InMemoryUserDetailsManager(user);
     }
+
+//    @Bean
+//    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 
 }

@@ -1,11 +1,23 @@
 package com.example.finalfinalback3.Entity;
 
+import com.example.finalfinalback3.Enum.RoleEnum;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
+@Data
+@Builder
+@AllArgsConstructor
 @Entity
-public class UserEntity {
+public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
@@ -15,6 +27,15 @@ public class UserEntity {
     private String password;
 
     private String password_confirm;
+    //@Enumerated(EnumType.STRING)
+    //private RoleEnum role;
+
+    public UserEntity(String email, String login, String password, String password_confirm) {
+        this.email = email;
+        this.login = login;
+        this.password = password;
+        this.password_confirm = password_confirm;
+    }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<TodoEntity> todolist;
@@ -57,8 +78,39 @@ public class UserEntity {
         this.login = login;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+        //return role.getAuthorities();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 
     public void setPassword(String password) {

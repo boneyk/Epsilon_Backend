@@ -1,6 +1,7 @@
 package com.example.finalfinalback3.Controller;
 
 import com.example.finalfinalback3.DTO.UserAuthDTO;
+import com.example.finalfinalback3.DTO.UserRegisterDTO;
 import com.example.finalfinalback3.Entity.UserEntity;
 import com.example.finalfinalback3.Service.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -19,7 +20,7 @@ public class WebController {
     //private final String VIEW_COUNT = "VIEW_COUNT";
     @GetMapping("/registration")
     public String registration(Model model) {
-        model.addAttribute("user", new UserEntity());
+        model.addAttribute("user", new UserRegisterDTO());
         try {
             return "registration";
         }
@@ -37,6 +38,11 @@ public class WebController {
 //    public String guestGreeting(){
 //        return "guestGreeting";
 //    }
+
+    @GetMapping("/")
+    public String guest() {
+        return "guestGreeting";
+    }
 
     @GetMapping("/main")
     public String main(Model model, Principal principal, HttpSession session){
