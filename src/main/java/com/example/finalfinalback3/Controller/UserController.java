@@ -1,24 +1,14 @@
 package com.example.finalfinalback3.Controller;
 
-import com.example.finalfinalback3.DTO.UserAuthDTO;
-import com.example.finalfinalback3.Exceptions.PasswordsNotSameException;
-import com.example.finalfinalback3.Exceptions.UserAlreadyExistsException;
-import com.example.finalfinalback3.Exceptions.UserNotFoundException;
-import com.example.finalfinalback3.Repository.UserRepository;
+import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Service.UserService;
-import com.example.finalfinalback3.Entity.UserEntity;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
-import java.util.concurrent.SynchronousQueue;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/users")
@@ -34,8 +24,11 @@ public class UserController {
     public ResponseEntity deleteUser(@PathVariable Integer id) {
         try {
             return ResponseEntity.ok(userService.deleteUser(id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Технические шоколаки");
+        } catch (DataNotFoundException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

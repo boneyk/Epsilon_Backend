@@ -1,15 +1,13 @@
 package com.example.finalfinalback3.DTO;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserAuthDTO {
-    public String login;
-    public String password;
+    private String login;
+    private String password;
 }
 
 

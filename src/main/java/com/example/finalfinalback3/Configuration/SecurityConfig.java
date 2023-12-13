@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -19,12 +20,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value(value = "${api.endpoint.base-url}")
-    private String baseUrl;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .csrf((csrf) ->csrf.ignoringRequestMatchers(new AntPathRequestMatcher("/api/**")))
                 .authorizeHttpRequests((request) -> request
 //                        .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/api/auth")).permitAll()
@@ -32,10 +31,11 @@ public class SecurityConfig {
 //                        .requestMatchers(new AntPathRequestMatcher("/signin/**")).permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/registration/**")).permitAll()
                         .anyRequest().permitAll())
-                .formLogin((form) -> form
-                        .loginProcessingUrl("/api/auth").permitAll()
-                        .loginPage("/signin").permitAll()
-                        .defaultSuccessUrl("/main"))
+                //.formLogin((form) -> form
+                //        .loginProcessingUrl("/api/auth").permitAll()
+                //        .loginPage("/signin").permitAll()
+                //       .defaultSuccessUrl("/main"))
+
                 .build();
     }
 
