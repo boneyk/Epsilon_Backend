@@ -1,8 +1,7 @@
 package com.example.finalfinalback3.Service;
 
 import com.example.finalfinalback3.Entity.TodoEntity;
-import com.example.finalfinalback3.Entity.UserEntity;
-import com.example.finalfinalback3.Exceptions.UserNotFoundException;
+import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Model.Todo;
 import com.example.finalfinalback3.Repository.TodoRepository;
 import com.example.finalfinalback3.Repository.UserRepository;
@@ -17,9 +16,9 @@ public class TodoService {
     @Autowired
     private UserRepository userRepo;
 
-    public Todo create(TodoEntity todo, Integer userId) throws UserNotFoundException {
+    public Todo create(TodoEntity todo, Integer userId) throws DataNotFoundException {
         if (userRepo.findById(userId).get() == null){
-            throw new UserNotFoundException("Не удаётся создать задачу - пользователь не найден");
+            throw new DataNotFoundException("Не удаётся создать задачу - пользователь не найден");
         }
         todo.setUser(userRepo.findById(userId).get());
         return Todo.toModel(todoRepo.save(todo));

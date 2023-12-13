@@ -1,5 +1,6 @@
 package com.example.finalfinalback3.Controller;
 
+import com.example.finalfinalback3.DTO.TourAddDTO;
 import com.example.finalfinalback3.DTO.UserAuthDTO;
 import com.example.finalfinalback3.DTO.UserRegisterDTO;
 import com.example.finalfinalback3.Entity.UserEntity;
@@ -34,16 +35,11 @@ public class WebController {
         model.addAttribute("user", new UserAuthDTO());
         return "signin";
     }
-//    @GetMapping("/guest")
-//    public String guestGreeting(){
-//        return "guestGreeting";
+
+//    @GetMapping("/")
+//    public String tours(Model model) {
+//        return "tours";
 //    }
-
-    @GetMapping("/")
-    public String guest() {
-        return "guestGreeting";
-    }
-
     @GetMapping("/main")
     public String main(Model model, Principal principal, HttpSession session){
         try {
