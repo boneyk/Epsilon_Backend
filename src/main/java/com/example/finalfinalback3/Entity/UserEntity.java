@@ -19,12 +19,11 @@ public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
-
     private String email;
     private String login;
     private String password;
-
     private String password_confirm;
+    //TODO Добавить картинку пользователя
     //@Enumerated(EnumType.STRING)
     //private RoleEnum role;
 

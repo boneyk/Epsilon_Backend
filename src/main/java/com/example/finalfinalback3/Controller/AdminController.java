@@ -1,11 +1,13 @@
 package com.example.finalfinalback3.Controller;
 
+import com.example.finalfinalback3.DTO.ImageAddDTO;
 import com.example.finalfinalback3.DTO.TourAddDTO;
 import com.example.finalfinalback3.DTO.TourMainDTO;
 import com.example.finalfinalback3.Entity.TourEntity;
 import com.example.finalfinalback3.Entity.UserEntity;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
+import com.example.finalfinalback3.Service.ImageService;
 import com.example.finalfinalback3.Service.TourService;
 import com.example.finalfinalback3.Service.UserService;
 import org.springframework.http.HttpStatus;
@@ -20,10 +22,12 @@ public class AdminController {
 
     private final UserService userService;
     private final TourService tourService;
+    private final ImageService imageService;
 
-    public AdminController(UserService userService, TourService tourService) {
+    public AdminController(UserService userService, TourService tourService, ImageService imageService) {
         this.userService = userService;
         this.tourService = tourService;
+        this.imageService = imageService;
     }
 
     @GetMapping("/users/{id}")
@@ -69,7 +73,7 @@ public class AdminController {
     @GetMapping("/tours")
     public ResponseEntity showAllTours(){
         try {
-            List<TourMainDTO> tour_list = tourService.showAll();
+            List<TourEntity> tour_list = tourService.adminShowAll();
             return new ResponseEntity(tour_list, HttpStatus.OK);
     } catch (DataNotFoundException e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -92,14 +96,36 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/images")
+    public ResponseEntity addImage(@RequestBody ImageAddDTO image){
+        try {
+            imageService.addImage(image);
+            return new ResponseEntity(HttpStatus.CREATED);
+        }
+        catch (DataAlreadyExistsException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping
     public String post(){
         return "POST:: admin controller";
     }
 
-    @PutMapping
-    public String Put(){
-        return "PUT:: admin controller";
+    @PutMapping("/tours/{tour_id}/images/{image_id}")
+    public ResponseEntity addImageToTour(@PathVariable Integer tour_id,
+                      @PathVariable Integer image_id) throws DataNotFoundException{
+        try {
+            tourService.setImage(tour_id, image_id);
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        catch (DataNotFoundException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping

@@ -4,10 +4,11 @@ import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Service.TourService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.lang.NonNull;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/tours")
@@ -36,6 +37,23 @@ public class TourController {
     public ResponseEntity getTourById(@PathVariable Integer id){
         try{
             return new ResponseEntity(tourService.getTourById(id), HttpStatus.OK);
+        } catch (DataNotFoundException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/filtered")
+    public ResponseEntity showFilteredTours(@RequestParam String country_from, //В TourService значения по умолчанию стоят
+                                           @RequestParam String country_to,
+                                           @RequestParam LocalDate date_start,
+                                           @RequestParam Integer nights,
+                                            @RequestParam Integer amount){
+        try{
+            return new ResponseEntity(
+                    tourService.showFilteredTours(country_from, country_to, date_start, nights, amount),
+                    HttpStatus.OK);
         } catch (DataNotFoundException e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e){
