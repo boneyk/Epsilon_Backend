@@ -45,14 +45,13 @@ public class TourController {
     }
 
     @GetMapping("/filtered")
-    public ResponseEntity showFilteredTours(@RequestParam String country_from, //В TourService значения по умолчанию стоят
-                                           @RequestParam String country_to,
+    public ResponseEntity showFilteredTours(@RequestParam String country_to,
                                            @RequestParam LocalDate date_start,
                                            @RequestParam Integer nights,
                                             @RequestParam Integer amount){
         try{
             return new ResponseEntity(
-                    tourService.showFilteredTours(country_from, country_to, date_start, nights, amount),
+                    tourService.showFilteredTours(country_to, date_start, nights, amount),
                     HttpStatus.OK);
         } catch (DataNotFoundException e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);

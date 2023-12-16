@@ -10,6 +10,7 @@ import com.example.finalfinalback3.Service.AuthService;
 import com.example.finalfinalback3.Service.TourService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,11 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity logout(){
+        return null;
+    }
+
     @PostMapping
     public ResponseEntity authUser(@RequestBody UserAuthDTO user){
         try{
@@ -50,4 +56,5 @@ public class AuthController {
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

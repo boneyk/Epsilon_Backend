@@ -59,7 +59,7 @@ public class TourService {
     public TourEntity getTourById(Integer id) throws DataNotFoundException{
         Optional<TourEntity> tour = tourRepo.findById(id);
         if (tour.isEmpty()){
-            throw new DataNotFoundException("Тура с таким id не найдено");
+            throw new DataNotFoundException("Тур с таким id не найден");
         }
         return tour.get();
     }
@@ -75,8 +75,7 @@ public class TourService {
         return image;
     }
 
-    public List<TourMainDTO> showFilteredTours(String country_from,
-                                               @NonNull String country_to,
+    public List<TourMainDTO> showFilteredTours(@NonNull String country_to,
                                                LocalDate date_start,
                                                Integer nights,
                                                @NonNull Integer amount) throws DataNotFoundException{

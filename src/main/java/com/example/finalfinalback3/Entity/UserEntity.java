@@ -15,7 +15,7 @@ import java.util.List;
 
 @Data
 @Entity
-public class UserEntity implements UserDetails {
+public class UserEntity{// implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
@@ -27,10 +27,8 @@ public class UserEntity implements UserDetails {
     //@Enumerated(EnumType.STRING)
     //private RoleEnum role;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<TodoEntity> todolist;
 
-    @Override
+   /* @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
         //return role.getAuthorities();
@@ -60,5 +58,5 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
-
+*/
 }

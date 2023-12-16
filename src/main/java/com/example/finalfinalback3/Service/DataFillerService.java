@@ -1,6 +1,7 @@
 package com.example.finalfinalback3.Service;
 
 import com.example.finalfinalback3.DTO.ImageAddDTO;
+import com.example.finalfinalback3.DTO.PersonalInfoAddDTO;
 import com.example.finalfinalback3.DTO.TourAddDTO;
 import com.example.finalfinalback3.DTO.UserRegisterDTO;
 import jakarta.annotation.PostConstruct;
@@ -16,10 +17,12 @@ public class DataFillerService {
     private final AuthService authService;
     private final TourService tourService;
     private final ImageService imageService;
-    public DataFillerService(AuthService authService, TourService tourService, ImageService imageService) {
+    private final  UserService userService;
+    public DataFillerService(AuthService authService, TourService tourService, ImageService imageService, UserService userService) {
         this.authService = authService;
         this.tourService = tourService;
         this.imageService = imageService;
+        this.userService = userService;
     }
 
     @PostConstruct
@@ -48,7 +51,7 @@ public class DataFillerService {
         imageService.addImage(image2);
 
         TourAddDTO tour1 = new TourAddDTO("Hot Egypt tour!", "Egypt", "Anoubis", LocalDate.of(2024, 7, 1), LocalDate.of(2024, 7, 16), "Foreign", 30, 99999, "some description here. Lorem ipsum sol amer grou fat yvur sop gtariqus divun gopraf");
-        TourAddDTO tour2 = new TourAddDTO("Populat Thailand tour!", "Thailand", "Bangkok", LocalDate.of(2024, 9, 15), LocalDate.of(2024,10, 15), "Foreign", 64, 150156, "some description here. Lorem ipsum sol amer grou fat yvur sop gtariqus divun gopraf");
+        TourAddDTO tour2 = new TourAddDTO("Popular Thailand tour!", "Thailand", "Bangkok", LocalDate.of(2024, 9, 15), LocalDate.of(2024,10, 15), "Foreign", 64, 150156, "some description here. Lorem ipsum sol amer grou fat yvur sop gtariqus divun gopraf");
         TourAddDTO tour3 = new TourAddDTO("Visit Japan!", "Japan", "Tokyo", LocalDate.of(2024, 6, 8), LocalDate.of(2024,6, 1), "Foreign", 15, 90000, "some description here. Lorem ipsum sol amer grou fat yvur sop gtariqus divun gopraf");
         TourAddDTO tour4 = new TourAddDTO("Fall into Korea!", "Korea", "Seoul", LocalDate.of(2024, 10, 18), LocalDate.of(2024,8, 18), "Foreign", 100, 200000, "some description here. Lorem ipsum sol amer grou fat yvur sop gtariqus divun gopraf");
         TourAddDTO tour5 = new TourAddDTO("Hot Mayami beach!", "America", "Maiami", LocalDate.of(2024, 7, 31), LocalDate.of(2024,6, 1), "Foreign", 10, 502000, "some description here. Lorem ipsum sol amer grou fat yvur sop gtariqus divun gopraf");
@@ -61,6 +64,9 @@ public class DataFillerService {
         tourService.addTour(tour5);
         tourService.addTour(tour6);
 
+        PersonalInfoAddDTO person1 = new PersonalInfoAddDTO(2, "Epsilon Developer team", "+79991115050");
+
+        //userService.addPersonalInfo(person1);
     }
 
 }
