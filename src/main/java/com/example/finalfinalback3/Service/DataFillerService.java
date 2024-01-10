@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class DataFillerService {
@@ -47,18 +48,77 @@ public class DataFillerService {
         //userService.setUserRoleAdmin(user2_id);
 
         ImageAddDTO image1 = new ImageAddDTO("egyptanoubis", "/images/", "anoubis", "1920x1080", ".png");
+        ImageAddDTO image1_1 = new ImageAddDTO("egtparam", "/images/", "anoubis", "1920x1080", ".png");
+        ImageAddDTO image1_2 = new ImageAddDTO("egtphoto1", "/images/", "anoubis", "1920x1080", ".png");
+        ImageAddDTO image1_3 = new ImageAddDTO("egtphoto2", "/images/", "anoubis", "1920x1080", ".png");
+        ImageAddDTO image1_4 = new ImageAddDTO("egtphoto3", "/images/", "anoubis", "1920x1080", ".png");
+
         ImageAddDTO image2 = new ImageAddDTO("thailandbangkok", "/images/", "bangkok", "1920x1080", ".png");
+        ImageAddDTO image2_1 = new ImageAddDTO("thaiparam", "/images/", "bangkok", "1920x1080", ".png");
+        ImageAddDTO image2_2 = new ImageAddDTO("thaiphoto1", "/images/", "bangkok", "1920x1080", ".png");
+        ImageAddDTO image2_3 = new ImageAddDTO("thaiphoto2", "/images/", "bangkok", "1920x1080", ".png");
+        ImageAddDTO image2_4 = new ImageAddDTO("thaiphoto3", "/images/", "bangkok", "1920x1080", ".png");
+
         ImageAddDTO image3 = new ImageAddDTO("japantokyo", "/images/", "japantokyo", "1920x1080", ".png");
+        ImageAddDTO image3_1 = new ImageAddDTO("japparam", "/images/", "japantokyo", "1920x1080", ".png");
+        ImageAddDTO image3_2 = new ImageAddDTO("japphoto1", "/images/", "japantokyo", "1920x1080", ".png");
+        ImageAddDTO image3_3 = new ImageAddDTO("japphoto2", "/images/", "japantokyo", "1920x1080", ".png");
+        ImageAddDTO image3_4 = new ImageAddDTO("japphoto3", "/images/", "japantokyo", "1920x1080", ".png");
+
         ImageAddDTO image4 = new ImageAddDTO("koreaseoul", "/images/", "koreaseoul", "1920x1080", ".png");
+        ImageAddDTO image4_1 = new ImageAddDTO("korparam", "/images/", "koreaseoul", "1920x1080", ".png");
+        ImageAddDTO image4_2 = new ImageAddDTO("korphoto1", "/images/", "koreaseoul", "1920x1080", ".png");
+        ImageAddDTO image4_3 = new ImageAddDTO("korphoto2", "/images/", "koreaseoul", "1920x1080", ".png");
+        ImageAddDTO image4_4 = new ImageAddDTO("korphoto3", "/images/", "koreaseoul", "1920x1080", ".png");
+
         ImageAddDTO image5 = new ImageAddDTO("americamaiami", "/images/", "americamaiami", "1920x1080", ".png");
+        ImageAddDTO image5_1 = new ImageAddDTO("maiparam", "/images/", "americamaiami", "1920x1080", ".png");
+        ImageAddDTO image5_2 = new ImageAddDTO("maiphoto1", "/images/", "americamaiami", "1920x1080", ".png");
+        ImageAddDTO image5_3 = new ImageAddDTO("maiphoto2", "/images/", "americamaiami", "1920x1080", ".png");
+        ImageAddDTO image5_4 = new ImageAddDTO("maiphoto3", "/images/", "americamaiami", "1920x1080", ".png");
+
         ImageAddDTO image6 = new ImageAddDTO("russiabaikal", "/images/", "russiabaikal", "1920x1080", ".png");
+        ImageAddDTO image6_1 = new ImageAddDTO("baiparam", "/images/", "russiabaikal", "1920x1080", ".png");
+        ImageAddDTO image6_2 = new ImageAddDTO("baiphoto1", "/images/", "russiabaikal", "1920x1080", ".png");
+        ImageAddDTO image6_3 = new ImageAddDTO("baiphoto2", "/images/", "russiabaikal", "1920x1080", ".png");
+        ImageAddDTO image6_4 = new ImageAddDTO("baiphoto3", "/images/", "russiabaikal", "1920x1080", ".png");
+
 
         Integer image1_id = imageService.addImage(image1).getId();
+        Integer image1_1_id = imageService.addImage(image1_1).getId();
+        Integer image1_2_id = imageService.addImage(image1_2).getId();
+        Integer image1_3_id = imageService.addImage(image1_3).getId();
+        Integer image1_4_id = imageService.addImage(image1_4).getId();
+
         Integer image2_id = imageService.addImage(image2).getId();
+        Integer image2_1_id = imageService.addImage(image2_1).getId();
+        Integer image2_2_id = imageService.addImage(image2_2).getId();
+        Integer image2_3_id = imageService.addImage(image2_3).getId();
+        Integer image2_4_id = imageService.addImage(image2_4).getId();
+
         Integer image3_id = imageService.addImage(image3).getId();
+        Integer image3_1_id = imageService.addImage(image3_1).getId();
+        Integer image3_2_id = imageService.addImage(image3_2).getId();
+        Integer image3_3_id = imageService.addImage(image3_3).getId();
+        Integer image3_4_id = imageService.addImage(image3_4).getId();
+
         Integer image4_id = imageService.addImage(image4).getId();
+        Integer image4_1_id = imageService.addImage(image4_1).getId();
+        Integer image4_2_id = imageService.addImage(image4_2).getId();
+        Integer image4_3_id = imageService.addImage(image4_3).getId();
+        Integer image4_4_id = imageService.addImage(image4_4).getId();
+
         Integer image5_id = imageService.addImage(image5).getId();
+        Integer image5_1_id = imageService.addImage(image5_1).getId();
+        Integer image5_2_id = imageService.addImage(image5_2).getId();
+        Integer image5_3_id = imageService.addImage(image5_3).getId();
+        Integer image5_4_id = imageService.addImage(image5_4).getId();
+
         Integer image6_id = imageService.addImage(image6).getId();
+        Integer image6_1_id = imageService.addImage(image6_1).getId();
+        Integer image6_2_id = imageService.addImage(image6_2).getId();
+        Integer image6_3_id = imageService.addImage(image6_3).getId();
+        Integer image6_4_id = imageService.addImage(image6_4).getId();
 
         TourAddDTO tour1 = new TourAddDTO("Горячая путёвка в Египет!", "Египет", "Анубис", "Международный", 30, 99999, "some description here. Lorem ipsum sol amer grou fat yvur sop gtariqus divun gopraf");
         TourAddDTO tour2 = new TourAddDTO("Гостеприимный Тайланд", "Тайланд", "Бангкок", "Международный", 64, 150156, "some description here. Lorem ipsum sol amer grou fat yvur sop gtariqus divun gopraf");
@@ -75,11 +135,40 @@ public class DataFillerService {
         Integer tour6_id = tourService.addTour(tour6).getId();
 
         tourService.setImage(tour1_id, image1_id);
+        tourService.setImage(tour1_id, image1_1_id);
+        tourService.setImage(tour1_id, image1_2_id);
+        tourService.setImage(tour1_id, image1_3_id);
+        tourService.setImage(tour1_id, image1_4_id);
+
         tourService.setImage(tour2_id, image2_id);
+        tourService.setImage(tour2_id, image2_1_id);
+        tourService.setImage(tour2_id, image2_2_id);
+        tourService.setImage(tour2_id, image2_3_id);
+        tourService.setImage(tour2_id, image2_4_id);
+
         tourService.setImage(tour3_id, image3_id);
+        tourService.setImage(tour3_id, image3_1_id);
+        tourService.setImage(tour3_id, image3_2_id);
+        tourService.setImage(tour3_id, image3_3_id);
+        tourService.setImage(tour3_id, image3_4_id);
+
         tourService.setImage(tour4_id, image4_id);
+        tourService.setImage(tour4_id, image4_1_id);
+        tourService.setImage(tour4_id, image4_2_id);
+        tourService.setImage(tour4_id, image4_3_id);
+        tourService.setImage(tour4_id, image4_4_id);
+
         tourService.setImage(tour5_id, image5_id);
+        tourService.setImage(tour5_id, image5_1_id);
+        tourService.setImage(tour5_id, image5_2_id);
+        tourService.setImage(tour5_id, image5_3_id);
+        tourService.setImage(tour5_id, image5_4_id);
+
         tourService.setImage(tour6_id, image6_id);
+        tourService.setImage(tour6_id, image6_1_id);
+        tourService.setImage(tour6_id, image6_2_id);
+        tourService.setImage(tour6_id, image6_3_id);
+        tourService.setImage(tour6_id, image6_4_id);
 
         DateAddDTO date1 = new DateAddDTO(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 2, 1));
         DateAddDTO date2 = new DateAddDTO(LocalDate.of(2024, 7, 15), LocalDate.of(2024, 8, 1));
