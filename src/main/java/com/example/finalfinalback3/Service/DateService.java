@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +60,14 @@ public class DateService {
         return modelMapper.map(date, DateWindow.class);
     }
 
+    public List<DateEntity> getDateByDateStart(LocalDate date_start) throws DataNotFoundException{
+        List<DateEntity> date = dateRepo.findAllByDateStart(date_start);
+        if (date.isEmpty()){
+            throw new DataNotFoundException("Такого временного промежутка не найдено");
+        }
+        return date;
+    }
+
     public Integer addTourToDate(DateAddDTO date, Integer tour_id) throws DataAlreadyExistsException {
         DateEntity new_date = modelMapper.map(date, DateEntity.class);
         TourEntity tour = tourService.getTourById(tour_id);
@@ -78,4 +87,6 @@ public class DateService {
         dateRepo.delete(date);
         return date;
     }
+
+
 }

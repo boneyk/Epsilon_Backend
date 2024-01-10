@@ -12,5 +12,11 @@ import java.util.List;
 public class TourDetails {
     private TourEntity tour;
     private String user_token;
-    private List<DocumentEntity> persons;
+    private List<DocumentEntity> persons; //Создать модельку для вывода в детали todo
+
+    public TourDetails(TourEntity tour, String user_token, List<DocumentEntity> persons) {
+        this.tour = tour;
+        this.user_token = user_token;
+        this.persons = persons;
+    }
 }

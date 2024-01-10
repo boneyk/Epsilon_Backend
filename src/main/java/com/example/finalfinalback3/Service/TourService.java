@@ -1,10 +1,7 @@
 package com.example.finalfinalback3.Service;
 
 import com.example.finalfinalback3.DTO.*;
-import com.example.finalfinalback3.Entity.DateEntity;
-import com.example.finalfinalback3.Entity.ImageEntity;
-import com.example.finalfinalback3.Entity.TourEntity;
-import com.example.finalfinalback3.Entity.UserEntity;
+import com.example.finalfinalback3.Entity.*;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Model.OrderDetails;
@@ -81,6 +78,7 @@ public class TourService {
                                                LocalDate date_start,
                                                Integer nights,
                                                @NonNull Integer amount) throws DataNotFoundException{
+        //починить фильтрацию todo
         Iterable<TourEntity> tours = tourRepo.findAllByCountryAndCapacityIsGreaterThanEqual(country_to, amount);
         if (!tours.iterator().hasNext()){
             throw new DataNotFoundException("Туров с такими параметрами не найдено");
@@ -161,7 +159,9 @@ public class TourService {
     }
 
     public TourDetails getTourDetails(Integer tourId, String token) {
-        return null;
+        TourEntity tour = getTourById(tourId);
+        List<DocumentEntity> persons = userService.getUserByToken(token).getDoc();
+        return new TourDetails(tour, token, persons);
     }
 
 

@@ -37,8 +37,7 @@ public class TourController {
     public ResponseEntity getTourDetails(@PathVariable Integer tour_id,
                                       @RequestParam String token){
         try{
-            tourService.getTourDetails(tour_id, token);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity(tourService.getTourDetails(tour_id, token), HttpStatus.OK);
         } catch (DataNotFoundException e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e){
