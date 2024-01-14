@@ -2,10 +2,8 @@ package com.example.finalfinalback3.Service;
 
 import com.example.finalfinalback3.DTO.OrderDTO;
 import com.example.finalfinalback3.DTO.TourCutDTO;
-import com.example.finalfinalback3.Entity.BookingEntity;
-import com.example.finalfinalback3.Entity.DateEntity;
-import com.example.finalfinalback3.Entity.DocumentEntity;
-import com.example.finalfinalback3.Entity.TripEntity;
+import com.example.finalfinalback3.Entity.*;
+import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Model.OrderDetails;
 import com.example.finalfinalback3.Repository.TripRepository;
 import org.modelmapper.ModelMapper;
@@ -18,14 +16,16 @@ import java.util.List;
 public class TripService {
     private final TripRepository tripRepo;
     private final BookingService bookService;
+    private final UserService userService;
     private final DateService dateService;
     private final DocumentService docService;
     private final TourService tourService;
     private final ModelMapper modelMapper;
 
-    public TripService(TripRepository tripRepo, BookingService bookService, DateService dateService, DocumentService docService, TourService tourService, ModelMapper modelMapper) {
+    public TripService(TripRepository tripRepo, BookingService bookService, UserService userService, DateService dateService, DocumentService docService, TourService tourService, ModelMapper modelMapper) {
         this.tripRepo = tripRepo;
         this.bookService = bookService;
+        this.userService = userService;
         this.dateService = dateService;
         this.docService = docService;
         this.tourService = tourService;
@@ -45,8 +45,22 @@ public class TripService {
                 .map(person -> docService.getPersonByToken(person.getToken()))
                 .toList();
         Integer people_amount = participants.size();
-        TripEntity trip = new TripEntity(people_amount, booking, participants);
-        return tripRepo.save(trip);
+        TripEntity trip = tripRepo.save(new TripEntity(people_amount, booking, participants));
+        UserEntity user = userService.getUserByToken(order.getToken());
+        List<TripEntity> history = user.getHistory();
+        history.add(trip);
+        user.setHistory(history);
+        userService.saveUser(user);
+        return trip;
+    }
+
+    public List<TripEntity> showHistory(String token){
+        UserEntity user = userService.getUserByToken(token);
+        List<TripEntity> history = user.getHistory();
+        if (history == null){
+            throw new DataNotFoundException("Путешествий не найдено! Надо исправлять!");
+        }
+        return history;
     }
 
 }

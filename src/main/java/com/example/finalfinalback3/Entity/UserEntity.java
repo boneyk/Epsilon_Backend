@@ -30,7 +30,6 @@ public class UserEntity{// implements UserDetails {
     )
     private List<TourEntity> favorites;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name="user_history",
             joinColumns = @JoinColumn(name = "user_id"),

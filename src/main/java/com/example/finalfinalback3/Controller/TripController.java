@@ -33,4 +33,9 @@ public class TripController {
     public ResponseEntity addTrip(@RequestBody OrderDTO order){
         return new ResponseEntity(tripService.addTrip(order), HttpStatus.OK);
     }
+
+    @GetMapping("/history")
+    public ResponseEntity showHistory(@RequestParam String token){
+        return new ResponseEntity(tripService.showHistory(token), HttpStatus.OK);
+    }
 }

@@ -74,12 +74,6 @@ public class TourController {
 //        return new ResponseEntity(tourService.showHistory(token), HttpStatus.OK);
 //    }
 
-//    @PatchMapping("/history/{tour_id}/to/{token}")
-//    public ResponseEntity addTourToHistory(@PathVariable Integer tour_id,
-//                                      @PathVariable String token){
-//        tourService.addTourToHistory(tour_id, token);
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
 
     
 
