@@ -27,59 +27,28 @@ public class DateController{
 
     @GetMapping("/{id}")
     public ResponseEntity getDateWindowById(@PathVariable Integer id){
-        try {
-            DateWindow date = dateService.getDateWindowById(id);
-            return new ResponseEntity(date, HttpStatus.OK);
+        DateWindow date = dateService.getDateWindowById(id);
+        return new ResponseEntity(date, HttpStatus.OK);
         }
-        catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
     @PostMapping("/add")
     public ResponseEntity addTourToDate(@RequestParam Integer tour_id,
-                                        @RequestBody DateAddDTO date){
-        try {
+                                        @RequestBody DateAddDTO date) throws DataAlreadyExistsException {
+
             dateService.addTourToDate(date, tour_id);
             return new ResponseEntity(HttpStatus.OK);
-        }
-        catch (DataAlreadyExistsException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping()
     public ResponseEntity showDateByTourId(@RequestParam Integer tour_id){
-        try {
-            List<DateWindow> date = dateService.showDateByTourId(tour_id);
-            return new ResponseEntity(date, HttpStatus.OK);
+        List<DateWindow> date = dateService.showDateByTourId(tour_id);
+        return new ResponseEntity(date, HttpStatus.OK);
         }
-        catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteDateWindowById(@PathVariable Integer id){
-        try {
-            DateEntity date = dateService.deleteDateById(id);
-            return new ResponseEntity(HttpStatus.OK);
+        DateEntity date = dateService.deleteDateById(id);
+        return new ResponseEntity(HttpStatus.OK);
         }
-        catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 
 }

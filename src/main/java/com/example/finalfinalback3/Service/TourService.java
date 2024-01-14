@@ -4,7 +4,7 @@ import com.example.finalfinalback3.DTO.*;
 import com.example.finalfinalback3.Entity.*;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
-import com.example.finalfinalback3.Model.OrderDetails;
+import com.example.finalfinalback3.Model.DocPersonalInfo;
 import com.example.finalfinalback3.Model.TourDetails;
 import com.example.finalfinalback3.Repository.TourRepository;
 import org.modelmapper.ModelMapper;
@@ -23,7 +23,6 @@ public class TourService {
     private final ImageService imageService;
     private final UserService userService;
     private final ModelMapper modelMapper;
-
 
     public TourService(TourRepository tourRepository, ImageService imageService, UserService userService, ModelMapper modelMapper) {
         this.tourRepo = tourRepository;
@@ -130,37 +129,36 @@ public class TourService {
         return user;
     }
 
-    public TourEntity addTourToHistory(Integer tour_id, String token) throws DataNotFoundException{
-        TourEntity tour = getTourById(tour_id);
-        UserEntity user = userService.getUserByToken(token);
-        List<TourEntity> history = user.getHistory();
-        history.add(tour);
-        user.setHistory(history);
-        userService.saveUser(user);
-        return tour;
-    }
+    //TODO переписать под TripEntity
+//    public TourEntity addTourToHistory(Integer tour_id, String token) throws DataNotFoundException{
+//        TourEntity tour = getTourById(tour_id);
+//        UserEntity user = userService.getUserByToken(token);
+//        List<TourEntity> history = user.getHistory();
+//        history.add(tour);
+//        user.setHistory(history);
+//        userService.saveUser(user);
+//        return tour;
+//    }
 
-    public List<TourHistoryDTO> showHistory(@NonNull String token) throws DataNotFoundException{
-        Iterable<TourEntity> tours = tourRepo.findAllByHistory(userService.getUserByToken(token));
-        if (!tours.iterator().hasNext()){
-            throw new DataNotFoundException("Как же так?! Вы нигде ещё не отдыхали! Надо исправлять!");
-        }
+//    public List<TourHistoryDTO> showHistory(@NonNull String token) throws DataNotFoundException{
+//        Iterable<TourEntity> tours = tourRepo.findAllByHistory(userService.getUserByToken(token));
+//        if (!tours.iterator().hasNext()){
+//            throw new DataNotFoundException("Как же так?! Вы нигде ещё не отдыхали! Надо исправлять!");
+//        }
+//
+//        return Streamable.of(tours)
+//                .stream()
+//                .map(tour -> modelMapper.map(tour, TourHistoryDTO.class))
+//                .toList();
+//    }
 
-        return Streamable.of(tours)
-                .stream()
-                .map(tour -> modelMapper.map(tour, TourHistoryDTO.class))
-                .toList();
-    }
-
-    public OrderDetails showOrderDetails(String token, Integer tourId) throws DataNotFoundException {
-        UserEntity user = userService.getUserByToken(token);
-        TourEntity tour = getTourById(tourId);
-        return new OrderDetails(tour, user);
-    }
 
     public TourDetails getTourDetails(Integer tourId, String token) {
         TourEntity tour = getTourById(tourId);
-        List<DocumentEntity> persons = userService.getUserByToken(token).getDoc();
+        List<DocPersonalInfo> persons = Streamable.of(userService.getUserByToken(token).getDoc())
+                .stream()
+                .map(doc -> modelMapper.map(doc, DocPersonalInfo.class))
+                .toList();
         return new TourDetails(tour, token, persons);
     }
 

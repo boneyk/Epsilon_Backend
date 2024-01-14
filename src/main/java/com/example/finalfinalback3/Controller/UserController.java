@@ -24,41 +24,18 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUser(@PathVariable Integer id) {
-        try {
-            return ResponseEntity.ok(userService.deleteUser(id));
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+       return ResponseEntity.ok(userService.deleteUser(id));
     }
 
     @PatchMapping("/info")
     public ResponseEntity changeAccountInfo(@RequestBody AccountInfoChangeDTO info,
                                           @RequestParam String token) {
-        try {
-            return new ResponseEntity(authService.changeAccountInfo(info, token), HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity(authService.changeAccountInfo(info, token), HttpStatus.OK);
     }
 
     @GetMapping("/info")
     public ResponseEntity showAccountInfo(@RequestParam String token) {
-        try {
-            return new ResponseEntity(userService.showAccountInfo(token), HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity(userService.showAccountInfo(token), HttpStatus.OK);
     }
-
-
 
 }

@@ -36,10 +36,11 @@ public class TourEntity {
     @ManyToMany(mappedBy = "favorites")
     private List<UserEntity> favorites;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "history")
-    private List<UserEntity> history;
 
     @ManyToMany(mappedBy = "tour")
     private List<DateEntity> date;
+
+    @JsonIgnore
+    @OneToMany
+    private List<BookingEntity> booking;
 }

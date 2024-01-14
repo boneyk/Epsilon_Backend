@@ -23,4 +23,8 @@ public class DateEntity{
             inverseJoinColumns = @JoinColumn(name = "tour_id")
     )
     private List<TourEntity> tour;
+
+    @JsonIgnore
+    @OneToMany
+    private List<BookingEntity> booking;
 }

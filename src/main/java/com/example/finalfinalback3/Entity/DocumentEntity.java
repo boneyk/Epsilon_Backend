@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -28,9 +29,12 @@ public class DocumentEntity {
     private PassportEntity passport;
 
     @ManyToOne
-    //@MapsId
     @JsonIgnore
     private UserEntity user;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "participants")
+    private List<TripEntity> trip;
 
     public DocumentEntity(Integer id, PassportEntity passport) {
         this.id = id;

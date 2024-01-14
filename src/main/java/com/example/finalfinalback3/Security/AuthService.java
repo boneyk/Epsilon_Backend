@@ -88,14 +88,14 @@ public class AuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         UserEntity user = authRepo.findByLogin(login);
-        if (user != null){
+        if (user == null){
             throw new UsernameNotFoundException("Такой пользователь не найден");
         }
         return modelMapper.map(user, UserAuthPrincipal.class);
     }
 
     //TODO вынести отдельным классом
-    private String hashCode(String input) {
+    public String hashCode(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(input.getBytes());

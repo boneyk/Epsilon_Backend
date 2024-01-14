@@ -36,13 +36,7 @@ public class TourController {
     @GetMapping("/{tour_id}")
     public ResponseEntity getTourDetails(@PathVariable Integer tour_id,
                                       @RequestParam String token){
-        try{
-            return new ResponseEntity(tourService.getTourDetails(tour_id, token), HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity(tourService.getTourDetails(tour_id, token), HttpStatus.OK);
     }
 
     @GetMapping("/filtered")
@@ -50,90 +44,42 @@ public class TourController {
                                            @RequestParam LocalDate date_start,
                                            @RequestParam Integer nights,
                                             @RequestParam Integer amount){
-        try{
-            return new ResponseEntity(
-                    tourService.showFilteredTours(country_to, date_start, nights, amount),
-                    HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity(
+                tourService.showFilteredTours(country_to, date_start, nights, amount),
+                HttpStatus.OK);
     }
 
     @GetMapping("/favorite")
     public ResponseEntity showFavoriteTours(@RequestParam String token){
-        try{
-            return new ResponseEntity(tourService.showFavoriteTours(token), HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity(tourService.showFavoriteTours(token), HttpStatus.OK);
     }
 
     @PatchMapping("/favorite/{tour_id}/to/{token}")
     public ResponseEntity addFavorite(@PathVariable Integer tour_id,
                                       @PathVariable String token){
-        try{
-            tourService.addFavorite(tour_id, token);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        tourService.addFavorite(tour_id, token);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("favorite/{tour_id}/from/{token}")
     public ResponseEntity removeFromFavorite(@PathVariable Integer tour_id,
                                              @PathVariable String token){
-        try{
-            tourService.removeFromFavorite(tour_id, token);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        tourService.removeFromFavorite(tour_id, token);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 
-    @GetMapping("/history")
-    public ResponseEntity showHistory(@RequestParam String token){
-        try{
-            return new ResponseEntity(tourService.showHistory(token), HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @GetMapping("/history")
+//    public ResponseEntity showHistory(@RequestParam String token){
+//        return new ResponseEntity(tourService.showHistory(token), HttpStatus.OK);
+//    }
 
-    @PatchMapping("/history/{tour_id}/to/{token}")
-    public ResponseEntity addTourToHistory(@PathVariable Integer tour_id,
-                                      @PathVariable String token){
-        try{
-            tourService.addTourToHistory(tour_id, token);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/order")
-    public ResponseEntity showOrderDetails(@RequestParam String token,
-                                           @RequestParam Integer tour_id){
-        try{
-            return new ResponseEntity(tourService.showOrderDetails(token, tour_id), HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @PatchMapping("/history/{tour_id}/to/{token}")
+//    public ResponseEntity addTourToHistory(@PathVariable Integer tour_id,
+//                                      @PathVariable String token){
+//        tourService.addTourToHistory(tour_id, token);
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 
     
 

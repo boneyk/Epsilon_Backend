@@ -32,95 +32,45 @@ public class AdminController {
 
     @GetMapping("/users/{user_id}")
     public ResponseEntity getUserById(@PathVariable Integer user_id){
-        try {
             UserEntity user = userService.getUserById(user_id);
             return new ResponseEntity(user, HttpStatus.OK);
-        }
-        catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping("/users")
     public ResponseEntity showAllUsers() {
-        try {
-            List<UserEntity> user_list = userService.showAll();
-            return new ResponseEntity(user_list, HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<UserEntity> user_list = userService.showAll();
+        return new ResponseEntity(user_list, HttpStatus.OK);
     }
 
     //TODO Доработать под создание произвольных ролей
     @PatchMapping("/users/{user_id}")
     public ResponseEntity setUserRoleAdmin(@PathVariable Integer user_id){
-        try{
-            userService.setUserRoleAdmin(user_id);
-            return new ResponseEntity(HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        userService.setUserRoleAdmin(user_id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/tours/{id}")
     public ResponseEntity getTourById(@PathVariable Integer id){
-        try{
-            TourEntity tour = tourService.getTourById(id);
-            return new ResponseEntity(tour, HttpStatus.OK);
-        } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        TourEntity tour = tourService.getTourById(id);
+        return new ResponseEntity(tour, HttpStatus.OK);
     }
 
     @GetMapping("/tours")
     public ResponseEntity showAllTours(){
-        try {
-            List<TourEntity> tour_list = tourService.adminShowAll();
-            return new ResponseEntity(tour_list, HttpStatus.OK);
-    } catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<TourEntity> tour_list = tourService.adminShowAll();
+        return new ResponseEntity(tour_list, HttpStatus.OK);
     }
 
     @PostMapping("/tours")
-    public ResponseEntity addTour(@RequestBody TourAddDTO tour){
-        try {
-            tourService.addTour(tour);
-            return new ResponseEntity(HttpStatus.CREATED);
-        }
-        catch (DataAlreadyExistsException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity addTour(@RequestBody TourAddDTO tour) throws DataAlreadyExistsException {
+        tourService.addTour(tour);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @PostMapping("/images")
-    public ResponseEntity addImage(@RequestBody ImageAddDTO image){
-        try {
-            imageService.addImage(image);
-            return new ResponseEntity(HttpStatus.CREATED);
-        }
-        catch (DataAlreadyExistsException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity addImage(@RequestBody ImageAddDTO image) throws DataAlreadyExistsException {
+        imageService.addImage(image);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @PostMapping
@@ -131,15 +81,8 @@ public class AdminController {
     @PutMapping("/tours/{tour_id}/images/{image_id}")
     public ResponseEntity addImageToTour(@PathVariable Integer tour_id,
                       @PathVariable Integer image_id) throws DataNotFoundException{
-        try {
-            tourService.setImage(tour_id, image_id);
-            return new ResponseEntity(HttpStatus.OK);
-        }
-        catch (DataNotFoundException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }catch (Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        tourService.setImage(tour_id, image_id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping

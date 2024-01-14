@@ -62,11 +62,11 @@ public class DocumentService {
         return new Token(doc.getToken());
     }
 
-    public DocumentEntity addPersonalInfo(PersonalInfoAddDTO info) throws DataNotFoundException{
-        DocumentEntity doc = getPersonById(info.getDoc_id());
+    public PersonalInfoAddDTO addPersonalInfo(PersonalInfoAddDTO info, String doc_token) throws DataNotFoundException{
+        DocumentEntity doc = getPersonByToken(doc_token);
         doc.setFullname(info.getFullname());
         doc.setPhone_number(info.getPhone_number());
-        return docRepo.save(doc);
+        return modelMapper.map(docRepo.save(doc), PersonalInfoAddDTO.class);
     }
 
     public PassportEntity addPassport(PassportAddDTO passport, String doc_token) throws DataNotFoundException,

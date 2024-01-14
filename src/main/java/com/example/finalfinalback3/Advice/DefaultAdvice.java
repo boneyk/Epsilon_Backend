@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class DefaultAdvice {
 
     @ExceptionHandler({
-            DataAlreadyExistsException.class,
-            PasswordsNotSameException.class,
             DataNotFoundException.class,
-            AccessException.class
+            AccessException.class,
+            DataAlreadyExistsException.class,
+            PasswordsNotSameException.class
     })
-    public ResponseEntity handleException(Exception e){
+    public ResponseEntity handleException(Exception e) {
         ResponseException response = new ResponseException(e.getMessage());
         return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
     }
