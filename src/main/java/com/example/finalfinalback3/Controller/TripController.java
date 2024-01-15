@@ -24,12 +24,12 @@ public class TripController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity showOrderDetails(@RequestBody OrderDTO order){
         return new ResponseEntity(tripService.showOrderDetails(order), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity addTrip(@RequestBody OrderDTO order){
         return new ResponseEntity(tripService.addTrip(order), HttpStatus.OK);
     }
