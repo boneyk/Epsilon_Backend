@@ -1,11 +1,11 @@
 package com.example.finalfinalback3.Entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class BookingEntity {
     @Id

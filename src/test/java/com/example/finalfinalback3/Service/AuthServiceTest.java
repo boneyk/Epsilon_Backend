@@ -5,6 +5,7 @@ import com.example.finalfinalback3.Entity.UserEntity;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.PasswordsNotSameException;
 import com.example.finalfinalback3.Model.Token;
+import com.example.finalfinalback3.Model.TokenRole;
 import com.example.finalfinalback3.Repository.UserRepository;
 import com.example.finalfinalback3.Security.AuthRepository;
 import com.example.finalfinalback3.Security.AuthService;
@@ -43,7 +44,7 @@ public class AuthServiceTest {
         Mockito.when(authRepo.save(Mockito.any()))
                 .thenReturn(new UserEntity(1, "Dum@gmail.com", "123", "preparedString_password"));
 
-        Token token = authService.registration(new_user);
+        TokenRole token = authService.registration(new_user);
         Assertions.assertEquals(token.getToken(), "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3");
     }
     @Test

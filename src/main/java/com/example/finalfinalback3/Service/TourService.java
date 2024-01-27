@@ -38,6 +38,15 @@ public class TourService {
         return tourRepo.save(modelMapper.map(tour, TourEntity.class));
     }
 
+    public TourEntity saveTour(TourEntity tour){
+        return tourRepo.save(tour);
+    }
+
+    public List<TourEntity> getAllByManagerIsNull(){
+        return tourRepo.findAllByManagerIsNull();
+    }
+
+
     public List<TourEntity> adminShowAll() throws DataNotFoundException{
         if (!tourRepo.findAll().iterator().hasNext()){
             throw new DataNotFoundException("Упс, похоже, сейчас туров нету. Все забрали!");

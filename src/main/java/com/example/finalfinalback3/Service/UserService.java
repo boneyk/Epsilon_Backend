@@ -1,6 +1,7 @@
 package com.example.finalfinalback3.Service;
 
 import com.example.finalfinalback3.DTO.AccountInfoChangeDTO;
+import com.example.finalfinalback3.Exceptions.AccessException;
 import com.example.finalfinalback3.Model.AccountInfoMain;
 import com.example.finalfinalback3.Entity.UserEntity;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
@@ -48,6 +49,9 @@ public class UserService {
         }
         return (List<UserEntity>) userRepo.findAll();
     }
+    public List<UserEntity> getAllByRole(String role){
+        return userRepo.findAllByRole(role);
+    }
 
     public Integer deleteUser(Integer id) throws DataNotFoundException {
         if (userRepo.findById(id) == null) {
@@ -69,6 +73,31 @@ public class UserService {
         UserEntity user = getUserById(id);
         user.setRole("ADMIN");
         return userRepo.save(user);
+    }
+    public UserEntity setUserRoleManager(String admin_token, String manager_token) throws DataNotFoundException, AccessException {
+        if (!isAdmin(admin_token)){
+            throw new AccessException("У вас недостаточно прав, чтобы назначать кого-то менеджером!");
+        }
+        UserEntity user = getUserByToken(manager_token);
+        user.setRole("MANAGER");
+        return userRepo.save(user);
+    }
+    public UserEntity setUserRoleUser(String admin_token, String victim_token) throws DataNotFoundException, AccessException {
+        if (!isAdmin(admin_token)){
+            throw new AccessException("У вас недостаточно прав, чтобы назначать кому-то другую роль!");
+        }
+        UserEntity user = getUserByToken(victim_token);
+        user.setRole("USER");
+        return userRepo.save(user);
+    }
+
+    public boolean isManager(String token){
+        String role = getUserByToken(token).getRole();
+        return (role.equals("MANAGER"));
+    }
+    public boolean isAdmin(String token){
+        String role = getUserByToken(token).getRole();
+        return (role.equals("ADMIN"));
     }
 
 }

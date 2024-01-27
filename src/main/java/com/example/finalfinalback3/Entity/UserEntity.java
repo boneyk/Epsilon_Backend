@@ -3,12 +3,15 @@ package com.example.finalfinalback3.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 public class UserEntity{// implements UserDetails {
@@ -37,8 +40,11 @@ public class UserEntity{// implements UserDetails {
     )
     private List<TripEntity> history;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<DocumentEntity> doc;
+
+    @OneToMany
+    private List<TourEntity> traceble;
 
     //TODO Добавить картинку пользователя
 

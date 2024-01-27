@@ -3,6 +3,8 @@ package com.example.finalfinalback3.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.springframework.security.core.userdetails.User;
 
@@ -12,7 +14,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class TourEntity {
     @Id
     @GeneratedValue
@@ -43,4 +46,8 @@ public class TourEntity {
     @JsonIgnore
     @OneToMany
     private List<BookingEntity> booking;
+
+    @JsonIgnore
+    @ManyToOne
+    private UserEntity manager;
 }

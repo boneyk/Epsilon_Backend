@@ -71,19 +71,21 @@ public class DocumentService {
 
     public PassportEntity addPassport(PassportAddDTO passport, String doc_token) throws DataNotFoundException,
             DataAlreadyExistsException {
+
         DocumentEntity doc = getPersonByToken(doc_token);
-        if (doc == null){
-            throw new DataNotFoundException("Прежде, чем добавлять паспорт, необходимо сохранить документ");
-        }
-        if (doc.getPassport() != null){
-            throw new DataAlreadyExistsException("Данному пользователю уже был добавлен паспорт");
-        }
-        PassportEntity new_passport = new PassportEntity(passport);//modelMapper.map(passport, PassportEntity.class);
-        new_passport.setDoc(doc);//Проверить, нужен ли этот пункт TODO
-        PassportEntity new_passport_entity = passportRepo.save(new_passport);
-        doc.setPassport(new_passport_entity);
-        docRepo.save(doc);
+            if (doc == null){
+                throw new DataNotFoundException("Прежде, чем добавлять паспорт, необходимо сохранить документ");
+            }
+            if (doc.getPassport() != null){
+                throw new DataAlreadyExistsException("Данному пользователю уже был добавлен паспорт");
+            }
+            PassportEntity new_passport = new PassportEntity(passport);//modelMapper.map(passport, PassportEntity.class);
+            new_passport.setDoc(doc);//Проверить, нужен ли этот пункт TODO
+            PassportEntity new_passport_entity = passportRepo.save(new_passport);
+            doc.setPassport(new_passport_entity);
+            docRepo.save(doc);
         //userService.saveUser(user);
+
         return new_passport_entity;
     }
 

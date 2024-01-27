@@ -9,8 +9,10 @@ import com.example.finalfinalback3.Repository.TripRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.function.SingletonSupplier;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TripService {
@@ -32,10 +34,18 @@ public class TripService {
         this.modelMapper = modelMapper;
     }
 
+    public TripEntity getTripById(Integer id){
+        return tripRepo.findById(id).get();
+    }
+
+    public TripEntity saveTrip(TripEntity trip){
+        return tripRepo.save(trip);
+    }
+
     public OrderDetails showOrderDetails(OrderDTO order) {
         TourCutDTO tour = modelMapper.map(tourService.getTourById(order.getTour_id()), TourCutDTO.class);
         DateEntity date = dateService.getDateById(order.getDate_id());
-        return new OrderDetails(tour, date, order.getToken(), order.getPerson_list());
+        return new OrderDetails(tour, date, order.getToken(), order.getPerson_list(), order.getPrice());
     }
 
     public TripEntity addTrip(OrderDTO order) {
@@ -45,7 +55,11 @@ public class TripService {
                 .map(person -> docService.getPersonByToken(person.getToken()))
                 .toList();
         Integer people_amount = participants.size();
-        TripEntity trip = tripRepo.save(new TripEntity(people_amount, booking, participants));
+        if (booking.getTour().getManager() == null){
+            throw new DataNotFoundException("У данного тура пока нет менеджера :(");
+        }
+        String manager_token = booking.getTour().getManager().getToken();
+        TripEntity trip = tripRepo.save(new TripEntity(people_amount, booking, participants, manager_token));
         UserEntity user = userService.getUserByToken(order.getToken());
         List<TripEntity> history = user.getHistory();
         history.add(trip);
@@ -57,10 +71,18 @@ public class TripService {
     public List<TripEntity> showHistory(String token){
         UserEntity user = userService.getUserByToken(token);
         List<TripEntity> history = user.getHistory();
-        if (history == null){
+        if (history.isEmpty()){
             throw new DataNotFoundException("Путешествий не найдено! Надо исправлять!");
         }
         return history;
+    }
+
+    public List<TripEntity> getAllByManager(String manager_token){
+        List<TripEntity> trips = tripRepo.findAllByManager(manager_token);
+        if (trips.isEmpty()){
+            throw new DataNotFoundException("У этого менеджера пока никто не купил туров");
+        }
+        return trips;
     }
 
 }

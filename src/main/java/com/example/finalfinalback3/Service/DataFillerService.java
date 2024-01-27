@@ -1,9 +1,7 @@
 package com.example.finalfinalback3.Service;
 
-import com.example.finalfinalback3.DTO.DateAddDTO;
-import com.example.finalfinalback3.DTO.ImageAddDTO;
-import com.example.finalfinalback3.DTO.TourAddDTO;
-import com.example.finalfinalback3.DTO.UserRegisterDTO;
+import com.example.finalfinalback3.DTO.*;
+import com.example.finalfinalback3.Model.Token;
 import com.example.finalfinalback3.Security.AuthService;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
@@ -11,7 +9,6 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -20,12 +17,14 @@ public class DataFillerService {
     private final AuthService authService;
     private final TourService tourService;
     private final ImageService imageService;
+    private final DocumentService docService;
     private final UserService userService;
     private final DateService dateService;
-    public DataFillerService(AuthService authService, TourService tourService, ImageService imageService, UserService userService, DateService dateService) {
+    public DataFillerService(AuthService authService, TourService tourService, ImageService imageService, DocumentService docService, UserService userService, DateService dateService) {
         this.authService = authService;
         this.tourService = tourService;
         this.imageService = imageService;
+        this.docService = docService;
         this.userService = userService;
         this.dateService = dateService;
     }
@@ -45,6 +44,9 @@ public class DataFillerService {
                 user_list) {
             authService.registration(user);
         }
+
+        //Напрямую назначаем роль админа
+        userService.setUserRoleAdmin(2);
 
         //userService.setUserRoleAdmin(user2_id);
 
@@ -145,9 +147,15 @@ public class DataFillerService {
                 new DateAddDTO(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 8)),
                 6);
 
-        //PersonalInfoAddDTO person1 = new PersonalInfoAddDTO("Epsilon Developer team", "+79991115050");
+        Token new_person = docService.addDocument("a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3");
 
-        //userService.addPersonalInfo(person1, user2_token.getToken());
+        PersonalInfoAddDTO person1 = new PersonalInfoAddDTO("Epsilon Developer team", "+79991115050");
+        docService.addPersonalInfo(person1, new_person.getToken());
+
+
+
+        //PassportAddDTO passport = new PassportAddDTO("Epsilon Developer team","mixed",LocalDate.of(2023, 10, 15), "Russia", "1234", "654321", LocalDate.of(2024, 1, 16),"myself","Coworking A8");
+        //docService.addPassport(passport, new_person.getToken());
     }
 
 }

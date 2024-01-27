@@ -8,6 +8,7 @@ import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Exceptions.PasswordsNotSameException;
 import com.example.finalfinalback3.Model.Token;
+import com.example.finalfinalback3.Model.TokenRole;
 import com.example.finalfinalback3.Repository.UserRepository;
 import com.example.finalfinalback3.Service.DocumentService;
 import org.modelmapper.ModelMapper;
@@ -39,7 +40,7 @@ public class AuthService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Token authUser(UserAuthDTO user,
+    public TokenRole authUser(UserAuthDTO user,
                             Map<String, String> headers) throws DataNotFoundException,
                                                                 PasswordsNotSameException {
         UserEntity find_user = authRepo.findByLogin(user.getLogin());
@@ -52,11 +53,11 @@ public class AuthService implements UserDetailsService {
         }//find_user.getId();
         //find_user.setToken(token);
         //userRepo.save(find_user);
-        return  new Token(find_user.getToken());
+        return new TokenRole(find_user.getToken(), find_user.getRole());
     }
 
     //@ExceptionHandler({DataAlreadyExistsException.class, PasswordsNotSameException.class})
-    public Token registration(UserRegisterDTO user) throws DataAlreadyExistsException,
+    public TokenRole registration(UserRegisterDTO user) throws DataAlreadyExistsException,
                                                             PasswordsNotSameException {
         UserEntity find_user = authRepo.findByLogin(user.getLogin());
         if (find_user != null) {
@@ -69,9 +70,10 @@ public class AuthService implements UserDetailsService {
         user.setPassword_confirm(passwordEncoder.encode(user.getPassword_confirm()));
         UserEntity new_user = authRepo.save(modelMapper.map(user, UserEntity.class));
         new_user.setToken(hashCode(user.getLogin()));
-        return new Token(authRepo.save(new_user).getToken());
+        UserEntity saved_user = authRepo.save(new_user);
+        return new TokenRole(saved_user.getToken(), saved_user.getRole());
     }
-    public Token changeAccountInfo(AccountInfoChangeDTO info, String token) throws DataNotFoundException{
+    public TokenRole changeAccountInfo(AccountInfoChangeDTO info, String token) throws DataNotFoundException{
         UserEntity user = userRepo.findByToken(token);
         if (user == null) {
             throw new DataNotFoundException("Пользователь, которому нужно изменить данные, не найден");
@@ -82,7 +84,7 @@ public class AuthService implements UserDetailsService {
         if (info.getPassword() != null) {user.setPassword(passwordEncoder.encode(info.getPassword()));}
         user.setToken(hashCode(user.getLogin()));
         UserEntity new_user = authRepo.save(modelMapper.map(user, UserEntity.class));
-        return new Token(new_user.getToken());
+        return new TokenRole(new_user.getToken(), new_user.getRole());
     }
 
     @Override

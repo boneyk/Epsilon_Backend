@@ -16,11 +16,13 @@ public class OrderDetails {
     private DateEntity date;
     private String token;
     private List<DocPersonalInfo> person_list;
+    private String price;
 
-    public OrderDetails(TourCutDTO tour, DateEntity date, String token, List<DocPersonalInfo> person_list) {
+    public OrderDetails(TourCutDTO tour, DateEntity date, String token, List<DocPersonalInfo> person_list, String price) {
         this.tour = tour;
         this.date = date;
         this.token = token;
         this.person_list = person_list;
+        this.price = price;
     }
 }

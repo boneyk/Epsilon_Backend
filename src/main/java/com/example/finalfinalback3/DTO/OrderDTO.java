@@ -13,4 +13,5 @@ public class OrderDTO {
     private Integer tour_id;
     private String token;
     private List<DocPersonalInfo> person_list;
+    private String price;
 }

@@ -4,11 +4,16 @@ import com.example.finalfinalback3.DTO.ImageAddDTO;
 import com.example.finalfinalback3.DTO.TourAddDTO;
 import com.example.finalfinalback3.Entity.TourEntity;
 import com.example.finalfinalback3.Entity.UserEntity;
+import com.example.finalfinalback3.Exceptions.AccessException;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
+import com.example.finalfinalback3.Model.AdminManager;
 import com.example.finalfinalback3.Service.ImageService;
+import com.example.finalfinalback3.Service.ManagerService;
 import com.example.finalfinalback3.Service.TourService;
 import com.example.finalfinalback3.Service.UserService;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.util.Streamable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,11 +28,15 @@ public class AdminController {
     private final UserService userService;
     private final TourService tourService;
     private final ImageService imageService;
+    private final ManagerService managerService;
+    private final ModelMapper modelMapper;
 
-    public AdminController(UserService userService, TourService tourService, ImageService imageService) {
+    public AdminController(UserService userService, TourService tourService, ImageService imageService, ManagerService managerService, ModelMapper modelMapper) {
         this.userService = userService;
         this.tourService = tourService;
         this.imageService = imageService;
+        this.managerService = managerService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/users/{user_id}")
@@ -42,12 +51,47 @@ public class AdminController {
         return new ResponseEntity(user_list, HttpStatus.OK);
     }
 
-    //TODO Доработать под создание произвольных ролей
-    @PatchMapping("/users/{user_id}")
-    public ResponseEntity setUserRoleAdmin(@PathVariable Integer user_id){
-        userService.setUserRoleAdmin(user_id);
+    @GetMapping("/users/manager")
+    public ResponseEntity showAllManagers(@RequestParam String admin_token){
+        String role = "MANAGER";
+        List<AdminManager> manager_list = Streamable.of(userService.getAllByRole(role))
+                .stream()
+                .map(manager -> modelMapper.map(manager, AdminManager.class))
+                .toList();
+        return new ResponseEntity(manager_list, HttpStatus.OK);
+    }
+
+    @PostMapping("/users/manager/{manager_token}")
+    public ResponseEntity setUserRoleManager(@RequestParam String admin_token,
+                                             @PathVariable String manager_token) throws AccessException {
+        userService.setUserRoleManager(admin_token, manager_token);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @PostMapping("/users/manager/{ex_manager_token}/fire")
+    public ResponseEntity setUserRoleUser(@RequestParam String admin_token,
+                                          @PathVariable String ex_manager_token) throws AccessException {
+        userService.setUserRoleUser(admin_token, ex_manager_token);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping("/users/manager/{manager_token}/tours/{tour_id}")
+    public ResponseEntity setTourToManager(@RequestParam String admin_token,
+                                           @PathVariable String manager_token,
+                                           @PathVariable Integer tour_id) throws AccessException, DataAlreadyExistsException {
+
+        managerService.AdminSetTourToManager(admin_token, manager_token, tour_id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+    @DeleteMapping("/users/manager/{manager_token}/tours/{tour_id}")
+    public ResponseEntity removeTourFromManager(@RequestParam String admin_token,
+                                                @PathVariable String manager_token,
+                                                @PathVariable Integer tour_id) throws AccessException, DataAlreadyExistsException {
+
+        managerService.AdminRemoveTourFromManager(admin_token, manager_token, tour_id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
 
     @GetMapping("/tours/{id}")
     public ResponseEntity getTourById(@PathVariable Integer id){
@@ -89,5 +133,4 @@ public class AdminController {
     public String delete(){
         return "DELETE:: admin controller";
     }
-
 }
