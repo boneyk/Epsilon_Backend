@@ -21,7 +21,6 @@ import java.util.List;
 
 
 @Service
-@Transactional
 public class ManagerService {
 
     private final UserService userService;

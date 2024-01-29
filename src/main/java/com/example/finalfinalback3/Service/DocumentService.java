@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Transactional
 public class DocumentService {
     private final DocumentRepository docRepo;
     private final PassportRepository passportRepo;
@@ -36,6 +35,9 @@ public class DocumentService {
         this.modelMapper = modelMapper;
     }
 
+    public DocumentEntity saveDoc(DocumentEntity doc){
+        return docRepo.save(doc);
+    }
     public DocumentEntity getPersonById(Integer id) throws DataNotFoundException{
         if (docRepo.findById(id).isEmpty()){
             throw new DataNotFoundException("Документов не найдено");
@@ -128,13 +130,34 @@ public class DocumentService {
                 .toList();
     }
 
-    //Проверить, почему выдаёт trying to assing from null one-to-one property TODO
+    //Не надо меня пилить за это ржавой ножовкой. Лучше расскажите, как правильно
     public PassportEntity changePassport(PassportAddDTO passport, String doc_token)
             throws DataNotFoundException {
      DocumentEntity doc = getPersonByToken(doc_token);
-     PassportEntity new_passport = passportRepo.save(modelMapper.map(passport, PassportEntity.class));
-     doc.setPassport(new_passport);
+     PassportEntity old_passport = doc.getPassport();
+
+     if (passport.getDob() != null) old_passport.setDob(passport.getDob());
+     if (passport.getSex() != null) old_passport.setSex(passport.getSex());
+     if (passport.getWg() != null) old_passport.setWg(passport.getWg());
+     if (passport.getDog() != null) old_passport.setDog(passport.getDog());
+     if (passport.getCitizenship() != null) old_passport.setCitizenship(passport.getCitizenship());
+     if (passport.getNumber() != null) old_passport.setNumber(passport.getNumber());
+     if (passport.getSerial() != null) old_passport.setSerial(passport.getSerial());
+     if (passport.getRegistration() != null) old_passport.setRegistration(passport.getRegistration());
+     if (passport.getFullname() != null) old_passport.setFullname(passport.getFullname());
+
+     doc.setPassport(old_passport);
      docRepo.save(doc);
-     return doc.getPassport();
+     return old_passport;
+
+    }
+
+    @Transactional
+    public void deletePassport(String doc_token){
+        DocumentEntity doc = getPersonByToken(doc_token);
+        PassportEntity passport = doc.getPassport();
+        doc.setPassport(null);
+        docRepo.save(doc);
+        passportRepo.delete(passport);
     }
 }

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class BookingService {
     private final BookingRepository bookRepo;
     private final ModelMapper modelMapper;

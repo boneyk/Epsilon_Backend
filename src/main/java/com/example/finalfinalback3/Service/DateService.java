@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class DateService {
     private final DateRepository dateRepo;
     private final TourService tourService;

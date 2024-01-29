@@ -42,7 +42,12 @@ public class DocumentController {
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
-
+    @DeleteMapping("/passport")
+    public ResponseEntity deletePassport(@RequestParam String doc_token)
+            throws DataNotFoundException{
+        docService.deletePassport(doc_token);
+        return new ResponseEntity(HttpStatus.OK);
+    }
     @PatchMapping("/passport")
     public ResponseEntity changePassport(@RequestBody PassportAddDTO passport,
                                          @RequestParam String doc_token)
