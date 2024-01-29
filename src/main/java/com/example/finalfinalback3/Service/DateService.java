@@ -7,17 +7,17 @@ import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Model.DateWindow;
 import com.example.finalfinalback3.Repository.DateRepository;
-import org.hibernate.internal.util.collections.SingletonIterator;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class DateService {
     private final DateRepository dateRepo;
     private final TourService tourService;

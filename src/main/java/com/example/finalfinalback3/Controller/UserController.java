@@ -1,7 +1,6 @@
 package com.example.finalfinalback3.Controller;
 
 import com.example.finalfinalback3.DTO.AccountInfoChangeDTO;
-import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Security.AuthService;
 import com.example.finalfinalback3.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

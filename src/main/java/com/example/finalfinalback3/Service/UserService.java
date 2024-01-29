@@ -1,11 +1,11 @@
 package com.example.finalfinalback3.Service;
 
-import com.example.finalfinalback3.DTO.AccountInfoChangeDTO;
-import com.example.finalfinalback3.Exceptions.AccessException;
-import com.example.finalfinalback3.Model.AccountInfoMain;
 import com.example.finalfinalback3.Entity.UserEntity;
+import com.example.finalfinalback3.Exceptions.AccessException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
+import com.example.finalfinalback3.Model.AccountInfoMain;
 import com.example.finalfinalback3.Repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserService {
 
     @Autowired

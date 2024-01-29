@@ -6,12 +6,14 @@ import com.example.finalfinalback3.Entity.DateEntity;
 import com.example.finalfinalback3.Entity.TourEntity;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Repository.BookingRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class BookingService {
     private final BookingRepository bookRepo;
     private final ModelMapper modelMapper;

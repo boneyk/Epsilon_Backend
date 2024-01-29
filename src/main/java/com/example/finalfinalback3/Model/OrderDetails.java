@@ -16,9 +16,9 @@ public class OrderDetails {
     private DateEntity date;
     private String token;
     private List<DocPersonalInfo> person_list;
-    private String price;
+    private Integer price;
 
-    public OrderDetails(TourCutDTO tour, DateEntity date, String token, List<DocPersonalInfo> person_list, String price) {
+    public OrderDetails(TourCutDTO tour, DateEntity date, String token, List<DocPersonalInfo> person_list, Integer price) {
         this.tour = tour;
         this.date = date;
         this.token = token;

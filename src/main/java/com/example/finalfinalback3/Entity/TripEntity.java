@@ -18,7 +18,7 @@ public class TripEntity {
     //СТАТУС ПО УМОЛЧАНИЮ СТАВИТСЯ В TripService.addTrip()
     private String status = "MODERATING";
     private String manager;
-    //Добавить цену
+    private Integer price;
 
     @OneToOne
     private BookingEntity bookingEntity;
@@ -30,13 +30,15 @@ public class TripEntity {
     private List<DocumentEntity> participants;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "history")
-    private List<UserEntity> history;
+    @ManyToOne
+    private UserEntity user;
 
-    public TripEntity(Integer people_amount, BookingEntity bookingEntity, List<DocumentEntity> participants, String manager) {
+    public TripEntity(Integer people_amount, String manager, Integer price, BookingEntity bookingEntity, List<DocumentEntity> participants, UserEntity user) {
         this.people_amount = people_amount;
+        this.manager = manager;
+        this.price = price;
         this.bookingEntity = bookingEntity;
         this.participants = participants;
-        this.manager = manager;
+        this.user = user;
     }
 }

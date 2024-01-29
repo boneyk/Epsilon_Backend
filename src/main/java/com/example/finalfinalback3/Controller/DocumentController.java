@@ -2,21 +2,14 @@ package com.example.finalfinalback3.Controller;
 
 import com.example.finalfinalback3.DTO.PassportAddDTO;
 import com.example.finalfinalback3.DTO.PersonalInfoAddDTO;
-import com.example.finalfinalback3.DTO.UserRegisterDTO;
-import com.example.finalfinalback3.Entity.DocumentEntity;
 import com.example.finalfinalback3.Exceptions.AccessException;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
-import com.example.finalfinalback3.Exceptions.PasswordsNotSameException;
-import com.example.finalfinalback3.Model.DocPersonalInfo;
 import com.example.finalfinalback3.Service.DocumentService;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.util.Streamable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/documents")

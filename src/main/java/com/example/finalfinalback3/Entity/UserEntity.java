@@ -33,11 +33,7 @@ public class UserEntity{// implements UserDetails {
     )
     private List<TourEntity> favorites;
 
-    @ManyToMany
-    @JoinTable(name="user_history",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "trip_id")
-    )
+    @OneToMany
     private List<TripEntity> history;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

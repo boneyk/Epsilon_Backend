@@ -10,9 +10,9 @@ public class ManagerTrip {
     private String login;
     private String country;
     private String city;
-    private String price;
+    private Integer price;
 
-    public ManagerTrip(Integer id, String login, String country, String city, String price) {
+    public ManagerTrip(Integer id, String login, String country, String city, Integer price) {
         this.id = id;
         this.login = login;
         this.country = country;

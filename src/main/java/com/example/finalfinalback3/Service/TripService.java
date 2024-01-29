@@ -6,15 +6,15 @@ import com.example.finalfinalback3.Entity.*;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Model.OrderDetails;
 import com.example.finalfinalback3.Repository.TripRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.function.SingletonSupplier;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Transactional
 public class TripService {
     private final TripRepository tripRepo;
     private final BookingService bookService;
@@ -35,6 +35,7 @@ public class TripService {
     }
 
     public TripEntity getTripById(Integer id){
+        if (tripRepo.findById(id).isEmpty()) throw new DataNotFoundException("Поездки с таким id не найдено");
         return tripRepo.findById(id).get();
     }
 
@@ -55,12 +56,12 @@ public class TripService {
                 .map(person -> docService.getPersonByToken(person.getToken()))
                 .toList();
         Integer people_amount = participants.size();
-        if (booking.getTour().getManager() == null){
+        if (!tourService.isHavingManager(order.getTour_id())){
             throw new DataNotFoundException("У данного тура пока нет менеджера :(");
         }
         String manager_token = booking.getTour().getManager().getToken();
-        TripEntity trip = tripRepo.save(new TripEntity(people_amount, booking, participants, manager_token));
         UserEntity user = userService.getUserByToken(order.getToken());
+        TripEntity trip = tripRepo.save(new TripEntity(people_amount, manager_token, order.getPrice(), booking, participants, user));
         List<TripEntity> history = user.getHistory();
         history.add(trip);
         user.setHistory(history);

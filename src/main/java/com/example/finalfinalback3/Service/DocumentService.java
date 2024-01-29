@@ -9,10 +9,11 @@ import com.example.finalfinalback3.Exceptions.AccessException;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
 import com.example.finalfinalback3.Model.DocPersonalInfo;
-import com.example.finalfinalback3.Model.Token;
 import com.example.finalfinalback3.Model.PersonalDocuments;
+import com.example.finalfinalback3.Model.Token;
 import com.example.finalfinalback3.Repository.DocumentRepository;
 import com.example.finalfinalback3.Repository.PassportRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.data.util.Streamable;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Transactional
 public class DocumentService {
     private final DocumentRepository docRepo;
     private final PassportRepository passportRepo;

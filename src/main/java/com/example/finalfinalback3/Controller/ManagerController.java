@@ -1,5 +1,6 @@
 package com.example.finalfinalback3.Controller;
 
+import com.example.finalfinalback3.DTO.TourAddDTO;
 import com.example.finalfinalback3.Exceptions.AccessException;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Service.ManagerService;
@@ -50,6 +51,19 @@ public class ManagerController {
     public ResponseEntity removeManagerFromTour(@PathVariable String token,
                                                 @PathVariable Integer tour_id) throws AccessException, DataAlreadyExistsException {
         return new ResponseEntity(managerService.removeTourFromManager(token, tour_id), HttpStatus.OK);
+    }
+
+    @PatchMapping("/edit/{tour_id}")
+    public ResponseEntity editTour(@RequestParam String token,
+                                   @PathVariable Integer tour_id,
+                                   @RequestBody TourAddDTO tour) throws AccessException {
+        return new ResponseEntity(managerService.editTour(tour, tour_id, token), HttpStatus.OK);
+    }
+
+    @GetMapping("/trip/{trip_id}")
+    public ResponseEntity showTripDetails(@PathVariable Integer trip_id,
+                                          @RequestParam String token) throws AccessException {
+        return new ResponseEntity(managerService.showTripDetails(trip_id, token), HttpStatus.OK);
     }
 
 }

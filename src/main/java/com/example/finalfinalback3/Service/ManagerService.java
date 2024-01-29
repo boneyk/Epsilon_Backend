@@ -1,33 +1,41 @@
 package com.example.finalfinalback3.Service;
 
-import com.example.finalfinalback3.Entity.BookingEntity;
+import com.example.finalfinalback3.DTO.TourAddDTO;
+import com.example.finalfinalback3.DTO.TourCutDTO;
 import com.example.finalfinalback3.Entity.TourEntity;
 import com.example.finalfinalback3.Entity.TripEntity;
 import com.example.finalfinalback3.Entity.UserEntity;
 import com.example.finalfinalback3.Exceptions.AccessException;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
+import com.example.finalfinalback3.Model.DocPersonalInfo;
 import com.example.finalfinalback3.Model.ManagerTour;
 import com.example.finalfinalback3.Model.ManagerTrip;
+import com.example.finalfinalback3.Model.OrderDetails;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
+@Transactional
 public class ManagerService {
 
     private final UserService userService;
     private final TourService tourService;
     private final TripService tripService;
     private final ModelMapper modelMapper;
+    private final ImageService imageService;
 
-    public ManagerService(UserService userService, TourService tourService, TripService tripService, ModelMapper modelMapper) {
+    public ManagerService(UserService userService, TourService tourService, TripService tripService, ModelMapper modelMapper, ImageService imageService) {
         this.userService = userService;
         this.tourService = tourService;
         this.tripService = tripService;
         this.modelMapper = modelMapper;
+        this.imageService = imageService;
     }
 
     public TourEntity setTourToManager(String token, Integer tour_id) throws AccessException, DataAlreadyExistsException {
@@ -37,7 +45,7 @@ public class ManagerService {
         TourEntity tour = tourService.getTourById(tour_id);
         UserEntity manager = userService.getUserByToken(token);
 
-        if (tour.getManager() != null){
+        if (tourService.isHavingManager(tour_id)){
             throw new DataAlreadyExistsException("Данному туру уже назначен свой менеджер");
         }
 
@@ -56,12 +64,13 @@ public class ManagerService {
         if (!userService.isManager(token)){
             throw new AccessException("Нельзя наначить на тур кого-то, кто не является менеджером");
         }
+        if (tourService.isHavingManager(tour_id)){
+            throw new DataAlreadyExistsException("Данному туру уже назначен свой менеджер");
+        }
         TourEntity tour = tourService.getTourById(tour_id);
         UserEntity manager = userService.getUserByToken(token);
 
-        if (tour.getManager() != null){
-            throw new DataAlreadyExistsException("Данному туру уже назначен свой менеджер");
-        }
+
 
         tour.setManager(manager);
         List<TourEntity> traceable = manager.getTraceble();
@@ -75,6 +84,9 @@ public class ManagerService {
         if (!userService.isManager(token)){
             throw new AccessException("Нельзя снять с тура того, кто не является менеджером!");
         }
+        if (!tourService.isHavingManager(tour_id)){
+            throw new DataNotFoundException("Нельзя удалить менеджера, потому что он не назначен");
+        }
         TourEntity tour = tourService.getTourById(tour_id);
         UserEntity manager = userService.getUserByToken(token);
 
@@ -82,7 +94,6 @@ public class ManagerService {
             throw new AccessException("Нельзя удалить не свой тур");
         }
 
-        userService.saveUser(manager);
         tour.setManager(null);
         List<TourEntity> traceable = manager.getTraceble();
         traceable.remove(tour);
@@ -97,6 +108,9 @@ public class ManagerService {
         if (!userService.isManager(token)){
             throw new AccessException("Нельзя снять с тура того, кто не является менеджером!");
         }
+        if (!tourService.isHavingManager(tour_id)){
+            throw new DataNotFoundException("Нельзя удалить менеджера, потому что он не назначен");
+        }
         TourEntity tour = tourService.getTourById(tour_id);
         UserEntity manager = userService.getUserByToken(token);
 
@@ -105,6 +119,10 @@ public class ManagerService {
         }
 
         tour.setManager(null);
+        List<TourEntity> traceable = manager.getTraceble();
+        traceable.remove(tour);
+        manager.setTraceble(traceable);
+        userService.saveUser(manager);
         return tourService.saveTour(tour);
     }
 
@@ -145,10 +163,10 @@ public class ManagerService {
                 .stream()
                 .map(trip -> new ManagerTrip(
                         trip.getId(),
-                        trip.getHistory().get(0).getLogin(),
+                        trip.getUser().getLogin(),
                         trip.getBookingEntity().getTour().getCountry(),
                         trip.getBookingEntity().getTour().getCity(),
-                        null))
+                        trip.getPrice()))
                 .toList();
     }
 
@@ -167,6 +185,54 @@ public class ManagerService {
         return tripService.saveTrip(trip);
     }
 
+    public TourEntity editTour(TourAddDTO new_tour_info, Integer tour_id, String token) throws AccessException {
+        if (!userService.isManager(token)){
+            throw new AccessException("Данный пользователь - не менеджер");
+        }
+        if (!tourService.isHavingManager(tour_id)){
+            throw new DataNotFoundException("Нельзя изменить тур, у которого нет менеджера");
+        }
+        TourEntity tour = tourService.getTourById(tour_id);
+        UserEntity manager = userService.getUserByToken(token);
+
+        if (tour.getManager() != manager){
+            throw new AccessException("Нельзя изменить не свой тур");
+        }
+
+        if (new_tour_info.getCity() != null) tour.setCity(new_tour_info.getCity());
+        if (new_tour_info.getCountry() != null) tour.setCountry(new_tour_info.getCountry());
+        if (new_tour_info.getTour_type() != null) tour.setTour_type(new_tour_info.getTour_type());
+        if (new_tour_info.getName() != null) tour.setName(new_tour_info.getName());
+        if (new_tour_info.getDescription() != null) tour.setDescription(new_tour_info.getDescription());
+        if (new_tour_info.getCapacity() != null) tour.setCapacity(new_tour_info.getCapacity());
+
+        return tourService.saveTour(tour);
+    }
+
+    public OrderDetails showTripDetails(Integer trip_id, String token) throws AccessException {
+        if (!userService.isManager(token)){
+            throw new AccessException("Данный пользователь - не менеджер");
+        }
+
+        TripEntity trip = tripService.getTripById(trip_id);
+        OrderDetails orderDetails = new OrderDetails();
+
+        if (!trip.getBookingEntity().getTour().getManager().getToken().equals(token)){
+            throw new AccessException("Вы не курируете этот тур, чтобы просматривать информацию о поездке");
+        }
+
+        orderDetails.setDate(trip.getBookingEntity().getDate());
+        orderDetails.setTour(modelMapper.map(trip.getBookingEntity().getTour(), TourCutDTO.class));
+        orderDetails.setToken(trip.getUser().getToken());
+        orderDetails.setPrice(trip.getPrice());
+        orderDetails.setPerson_list(Streamable.of(trip.getParticipants())
+                .stream()
+                .map(person -> modelMapper.map(person, DocPersonalInfo.class))
+                .toList());
+
+        return orderDetails;
+    }
+
 
 
     //Самоназначение менеджера на тур            ///////DONE
@@ -176,7 +242,8 @@ public class ManagerService {
     // (АДМИНСКИЕ) Вывод списка менеджеров           /////DONE
     //Вывод всех заявок менеджера               ///////DONE
     //Обработка заявки (сделать одной функцией) ////////DONE
+    // Просмотр заявки перед одобрением         //// DONE
     // Просмотр бесхозных туров                /////////DONE
     //Просмотр принадлежащих туров              ////////DONE
-    //Редактирование подвластных туров
+    //Редактирование подвластных туров          /////// DONE
 }
