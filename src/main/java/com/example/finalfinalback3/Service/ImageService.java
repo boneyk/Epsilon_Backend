@@ -22,6 +22,9 @@ public class ImageService {
         this.modelMapper = modelMapper;
         this.imageRepo = imageRepository;
     }
+    public ImageEntity saveImage(ImageEntity image){
+        return imageRepo.save(image);
+    }
 
     public ImageEntity getImageById(Integer id) throws DataNotFoundException{
         Optional<ImageEntity> image = imageRepo.findById(id);

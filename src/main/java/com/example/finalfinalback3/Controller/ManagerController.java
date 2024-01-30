@@ -1,5 +1,7 @@
 package com.example.finalfinalback3.Controller;
 
+import com.example.finalfinalback3.DTO.DateAddDTO;
+import com.example.finalfinalback3.DTO.ImageAddDTO;
 import com.example.finalfinalback3.DTO.TourAddDTO;
 import com.example.finalfinalback3.Exceptions.AccessException;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
@@ -54,10 +56,24 @@ public class ManagerController {
     }
 
     @PatchMapping("/edit/{tour_id}")
-    public ResponseEntity editTour(@RequestParam String token,
+    public ResponseEntity editTourInfo(@RequestParam String token,
                                    @PathVariable Integer tour_id,
                                    @RequestBody TourAddDTO tour) throws AccessException {
-        return new ResponseEntity(managerService.editTour(tour, tour_id, token), HttpStatus.OK);
+        return new ResponseEntity(managerService.editTourInfo(tour, tour_id, token), HttpStatus.OK);
+    }
+    @PatchMapping("/edit/{tour_id}/date/{date_id}")
+    public ResponseEntity editDate(@RequestParam String token,
+                                   @PathVariable Integer tour_id,
+                                   @PathVariable Integer date_id,
+                                   @RequestBody DateAddDTO new_date) throws AccessException, DataAlreadyExistsException {
+        return new ResponseEntity(managerService.editDate(new_date, date_id, tour_id, token), HttpStatus.OK);
+    }
+    @PatchMapping("/edit/{tour_id}/image/{image_id}")
+    public ResponseEntity editImage(@RequestParam String token,
+                                   @PathVariable Integer tour_id,
+                                   @PathVariable Integer image_id,
+                                   @RequestBody ImageAddDTO new_image) throws AccessException, DataAlreadyExistsException {
+        return new ResponseEntity(managerService.editImage(new_image, image_id, tour_id, token), HttpStatus.OK);
     }
 
     @GetMapping("/trip/{trip_id}")

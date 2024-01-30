@@ -1,10 +1,10 @@
 package com.example.finalfinalback3.Service;
 
+import com.example.finalfinalback3.DTO.DateAddDTO;
+import com.example.finalfinalback3.DTO.ImageAddDTO;
 import com.example.finalfinalback3.DTO.TourAddDTO;
 import com.example.finalfinalback3.DTO.TourCutDTO;
-import com.example.finalfinalback3.Entity.TourEntity;
-import com.example.finalfinalback3.Entity.TripEntity;
-import com.example.finalfinalback3.Entity.UserEntity;
+import com.example.finalfinalback3.Entity.*;
 import com.example.finalfinalback3.Exceptions.AccessException;
 import com.example.finalfinalback3.Exceptions.DataAlreadyExistsException;
 import com.example.finalfinalback3.Exceptions.DataNotFoundException;
@@ -12,7 +12,6 @@ import com.example.finalfinalback3.Model.DocPersonalInfo;
 import com.example.finalfinalback3.Model.ManagerTour;
 import com.example.finalfinalback3.Model.ManagerTrip;
 import com.example.finalfinalback3.Model.OrderDetails;
-import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
@@ -28,13 +27,15 @@ public class ManagerService {
     private final TripService tripService;
     private final ModelMapper modelMapper;
     private final ImageService imageService;
+    private final DateService dateService;
 
-    public ManagerService(UserService userService, TourService tourService, TripService tripService, ModelMapper modelMapper, ImageService imageService) {
+    public ManagerService(UserService userService, TourService tourService, TripService tripService, ModelMapper modelMapper, ImageService imageService, DateService dateService) {
         this.userService = userService;
         this.tourService = tourService;
         this.tripService = tripService;
         this.modelMapper = modelMapper;
         this.imageService = imageService;
+        this.dateService = dateService;
     }
 
     public TourEntity setTourToManager(String token, Integer tour_id) throws AccessException, DataAlreadyExistsException {
@@ -184,7 +185,7 @@ public class ManagerService {
         return tripService.saveTrip(trip);
     }
 
-    public TourEntity editTour(TourAddDTO new_tour_info, Integer tour_id, String token) throws AccessException {
+    public TourEntity editTourInfo(TourAddDTO new_tour_info, Integer tour_id, String token) throws AccessException {
         if (!userService.isManager(token)){
             throw new AccessException("Данный пользователь - не менеджер");
         }
@@ -206,6 +207,50 @@ public class ManagerService {
         if (new_tour_info.getCapacity() != null) tour.setCapacity(new_tour_info.getCapacity());
 
         return tourService.saveTour(tour);
+    }
+    public DateEntity editDate(DateAddDTO newDate, Integer dateId, Integer tour_id, String token) throws AccessException, DataAlreadyExistsException {
+        if (!userService.isManager(token)){
+            throw new AccessException("Данный пользователь - не менеджер");
+        }
+        if (!tourService.isHavingManager(tour_id)){
+            throw new DataNotFoundException("Нельзя изменить тур, у которого нет менеджера");
+        }
+
+        DateEntity date = dateService.getDateById(dateId);
+        TourEntity tour = tourService.getTourById(tour_id);
+        UserEntity manager = userService.getUserByToken(token);
+
+        if (tour.getManager() != manager){
+            throw new AccessException("Нельзя изменить не свой тур");
+        }
+        if (newDate.getDateStart() != null) date.setDateStart(newDate.getDateStart());
+        if (newDate.getDateEnd() != null) date.setDateEnd(newDate.getDateEnd());
+
+        return dateService.saveDate(date, tour);
+    }
+
+    public ImageEntity editImage(ImageAddDTO newImage, Integer imageId, Integer tourId, String token) throws AccessException {
+        if (!userService.isManager(token)){
+            throw new AccessException("Данный пользователь - не менеджер");
+        }
+        if (!tourService.isHavingManager(tourId)){
+            throw new DataNotFoundException("Нельзя изменить тур, у которого нет менеджера");
+        }
+
+        ImageEntity image = imageService.getImageById(imageId);
+        TourEntity tour = tourService.getTourById(tourId);
+        UserEntity manager = userService.getUserByToken(token);
+
+        if (tour.getManager() != manager){
+            throw new AccessException("Нельзя изменить не свой тур");
+        }
+        if (newImage.getFilename() != null) image.setFilename(newImage.getFilename());
+        if (newImage.getSize() != null) image.setSize(newImage.getSize());
+        if (newImage.getPath() != null) image.setPath(newImage.getPath());
+        if (newImage.getAlt() != null) image.setAlt(newImage.getAlt());
+        if (newImage.getContent_type() != null) image.setContent_type(newImage.getContent_type());
+
+        return imageService.saveImage(image);
     }
 
     public OrderDetails showTripDetails(Integer trip_id, String token) throws AccessException {
@@ -231,7 +276,6 @@ public class ManagerService {
 
         return orderDetails;
     }
-
 
 
     //Самоназначение менеджера на тур            ///////DONE
