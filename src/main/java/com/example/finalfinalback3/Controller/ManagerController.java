@@ -82,4 +82,29 @@ public class ManagerController {
         return new ResponseEntity(managerService.showTripDetails(trip_id, token), HttpStatus.OK);
     }
 
+    @PostMapping("/edit/{tour_id}/image")
+    public ResponseEntity loadAndAddImageToTour(@PathVariable Integer tour_id,
+                                                @RequestParam String token,
+                                                @RequestBody ImageAddDTO image) throws AccessException, DataAlreadyExistsException {
+        managerService.loadAndAddImageToTour(token, tour_id, image);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/edit/{tour_id}/image/{image_id}")
+    public ResponseEntity removeImageFromTour(@PathVariable Integer tour_id,
+                                              @RequestParam String token,
+                                              @PathVariable Integer image_id) throws AccessException, DataAlreadyExistsException {
+        managerService.removeImageFromTour(token, tour_id, image_id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    //ОШИБКА: UPDATE или DELETE в таблице "tour_entity" нарушает ограничение внешнего ключа "fk90y6narjrpkkrh6q4xe6oqvmk" таблицы "date_entity"
+    //  Подробности: На ключ (id)=(2) всё ещё есть ссылки в таблице "date_entity".
+//    @DeleteMapping("/tour/{tour_id}")
+//    public ResponseEntity deleteTour(@PathVariable Integer tour_id,
+//                                     @RequestParam String token) throws AccessException {
+//        managerService.deleteTour(tour_id, token);
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
+
 }

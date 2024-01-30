@@ -29,7 +29,7 @@ public class DateService {
     }
 
     public DateEntity saveDate(DateEntity date, TourEntity tour) throws DataAlreadyExistsException {
-        if (dateRepo.findByDateEndAndDateStartAndTourContains(date.getDateEnd(), date.getDateStart(), tour) != null){
+        if (dateRepo.findByDateEndAndDateStartAndTour(date.getDateEnd(), date.getDateStart(), tour) != null){
             throw new DataAlreadyExistsException("Такой временной промежуток уже существует");
         }
         return dateRepo.save(date);
@@ -37,10 +37,10 @@ public class DateService {
 
     public List<DateWindow> showDateByTourId(Integer tour_id) throws DataNotFoundException{
         TourEntity tour = tourService.getTourById(tour_id);
-        if (dateRepo.findAllByTourContains(tour).isEmpty()){
+        if (dateRepo.findAllByTour(tour).isEmpty()){
             throw new DataNotFoundException("Временных промежутков для данного тура пока нет");
         }
-        return Streamable.of(dateRepo.findAllByTourContains(tour))
+        return Streamable.of(dateRepo.findAllByTour(tour))
                 .stream()
                 .map(date -> modelMapper.map(date, DateWindow.class))
                 .toList();
@@ -67,18 +67,28 @@ public class DateService {
         return date;
     }
 
-    public Integer addTourToDate(DateAddDTO date, Integer tour_id) throws DataAlreadyExistsException {
+    public void addTourToDate(DateAddDTO date, Integer tour_id) throws DataAlreadyExistsException {
         DateEntity new_date = modelMapper.map(date, DateEntity.class);
         TourEntity tour = tourService.getTourById(tour_id);
-        List<TourEntity> tours = new_date.getTour();
-        if (tours == null){
-            new_date.setTour(List.of(tour));
+        if (new_date.getTour() != null){
+            throw new DataAlreadyExistsException("Эта дата уже присвоена другому туру");
         }
-        else {
-            tours.add(tour);
-            new_date.setTour(tours);
-        }
-        return saveDate(new_date, tour).getId();
+        new_date.setTour(tour);
+        List<DateEntity> dates = tour.getDate();
+        dates.add(saveDate(new_date, tour));
+        tour.setDate(dates);
+        tourService.saveTour(tour);
+    }
+
+    public void deleteTourAndDate(TourEntity tour){
+        Streamable.of(tour.getDate())
+                .stream()
+                .map(date -> {
+                    date.setTour(null);
+                    dateRepo.delete(date);
+                    return null;
+                });
+        tourService.deleteTour(tour);
     }
 
     public DateEntity deleteDateById(Integer date_id) {

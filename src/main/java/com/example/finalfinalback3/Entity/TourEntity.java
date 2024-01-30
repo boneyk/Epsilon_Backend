@@ -40,7 +40,7 @@ public class TourEntity {
     private List<UserEntity> favorites;
 
 
-    @ManyToMany(mappedBy = "tour")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<DateEntity> date;
 
     @JsonIgnore

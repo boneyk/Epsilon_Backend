@@ -17,12 +17,14 @@ public class OrderDetails {
     private String token;
     private List<DocPersonalInfo> person_list;
     private Integer price;
+    private String status;
 
-    public OrderDetails(TourCutDTO tour, DateEntity date, String token, List<DocPersonalInfo> person_list, Integer price) {
+    public OrderDetails(TourCutDTO tour, DateEntity date, String token, List<DocPersonalInfo> person_list, Integer price, String status) {
         this.tour = tour;
         this.date = date;
         this.token = token;
         this.person_list = person_list;
         this.price = price;
+        this.status = status;
     }
 }

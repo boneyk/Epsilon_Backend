@@ -9,8 +9,8 @@ import java.util.Collection;
 import java.util.List;
 
 public interface DateRepository extends CrudRepository<DateEntity, Integer> {
-    List<DateEntity> findAllByTourContains(TourEntity tour);
+    List<DateEntity> findAllByTour(TourEntity tour);
     List<DateEntity> findAllByDateStart(LocalDate date);
     //void deleteAllByTour(Integer tour_id);
-    DateEntity findByDateEndAndDateStartAndTourContains(LocalDate date_end, LocalDate date_start, TourEntity tour);
+    DateEntity findByDateEndAndDateStartAndTour(LocalDate date_end, LocalDate date_start, TourEntity tour);
 }

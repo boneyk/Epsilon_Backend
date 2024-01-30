@@ -19,13 +19,9 @@ public class DateEntity{
     private LocalDate dateStart;
     private LocalDate dateEnd;
 
-    @ManyToMany
+    @ManyToOne
     @JsonIgnore
-    @JoinTable(name = "tour_date",
-            joinColumns = @JoinColumn(name = "date_id"),
-            inverseJoinColumns = @JoinColumn(name = "tour_id")
-    )
-    private List<TourEntity> tour;
+    private TourEntity tour;
 
     @JsonIgnore
     @OneToMany

@@ -166,7 +166,8 @@ public class ManagerService {
                         trip.getUser().getLogin(),
                         trip.getBookingEntity().getTour().getCountry(),
                         trip.getBookingEntity().getTour().getCity(),
-                        trip.getPrice()))
+                        trip.getPrice(),
+                        trip.getStatus()))
                 .toList();
     }
 
@@ -183,6 +184,23 @@ public class ManagerService {
         else { trip.setStatus(negative); }
 
         return tripService.saveTrip(trip);
+    }
+
+    public void deleteTour(Integer tour_id, String token) throws AccessException {
+        if (!userService.isManager(token)){
+            throw new AccessException("Данный пользователь - не менеджер");
+        }
+        if (!tourService.isHavingManager(tour_id)){
+            throw new DataNotFoundException("Нельзя удалить тур, у которого нет менеджера");
+        }
+        TourEntity tour = tourService.getTourById(tour_id);
+        UserEntity manager = userService.getUserByToken(token);
+
+        if (tour.getManager() != manager){
+            throw new AccessException("Нельзя удалить не свой тур");
+        }
+
+        dateService.deleteTourAndDate(tour);
     }
 
     public TourEntity editTourInfo(TourAddDTO new_tour_info, Integer tour_id, String token) throws AccessException {
@@ -273,20 +291,50 @@ public class ManagerService {
                 .stream()
                 .map(person -> modelMapper.map(person, DocPersonalInfo.class))
                 .toList());
-
+        orderDetails.setStatus(trip.getStatus());
         return orderDetails;
     }
 
+    public void loadAndAddImageToTour(String token, Integer tour_id, ImageAddDTO image) throws DataAlreadyExistsException, AccessException {
+        if (!userService.isManager(token)){
+            throw new AccessException("Данный пользователь - не менеджер");
+        }
+        if (!tourService.isHavingManager(tour_id)){
+            throw new DataNotFoundException("Нельзя изменить тур, у которого нет менеджера");
+        }
 
-    //Самоназначение менеджера на тур            ///////DONE
-    //Самоудаление менеджера с тура              ////////DONE
-    // (АДМИНСКИЕ) Возможность убрать менеджера с тура /////DONE
-    // (АДМИНСКИЕ) понизить менеджера до пользователя /////DONE
-    // (АДМИНСКИЕ) Вывод списка менеджеров           /////DONE
-    //Вывод всех заявок менеджера               ///////DONE
-    //Обработка заявки (сделать одной функцией) ////////DONE
-    // Просмотр заявки перед одобрением         //// DONE
-    // Просмотр бесхозных туров                /////////DONE
-    //Просмотр принадлежащих туров              ////////DONE
-    //Редактирование подвластных туров          /////// DONE
+        TourEntity tour = tourService.getTourById(tour_id);
+        UserEntity manager = userService.getUserByToken(token);
+
+        if (tour.getManager() != manager){
+            throw new AccessException("Нельзя изменить не свой тур");
+        }
+
+        ImageEntity imageEntity = imageService.addImage(image);
+        tourService.setImage(tour_id, imageEntity.getId());
+    }
+
+
+    public void removeImageFromTour(String token, Integer tourId, Integer imageId) throws AccessException {
+        if (!userService.isManager(token)){
+            throw new AccessException("Данный пользователь - не менеджер");
+        }
+        if (!tourService.isHavingManager(tourId)){
+            throw new DataNotFoundException("Нельзя изменить тур, у которого нет менеджера");
+        }
+
+        ImageEntity image = imageService.getImageById(imageId);
+        TourEntity tour = tourService.getTourById(tourId);
+        UserEntity manager = userService.getUserByToken(token);
+
+        if (tour.getManager() != manager){
+            throw new AccessException("Нельзя изменить не свой тур");
+        }
+
+        List<ImageEntity> image_list = tour.getImages();
+        image_list.remove(image);
+
+        tour.setImages(image_list);
+        tourService.saveTour(tour);
+    }
 }

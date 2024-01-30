@@ -45,7 +45,12 @@ public class TripService {
     public OrderDetails showOrderDetails(OrderDTO order) {
         TourCutDTO tour = modelMapper.map(tourService.getTourById(order.getTour_id()), TourCutDTO.class);
         DateEntity date = dateService.getDateById(order.getDate_id());
-        return new OrderDetails(tour, date, order.getToken(), order.getPerson_list(), order.getPrice());
+        return new OrderDetails(tour,
+                date,
+                order.getToken(),
+                order.getPerson_list(),
+                order.getPrice(),
+                null);
     }
 
     public TripEntity addTrip(OrderDTO order) {

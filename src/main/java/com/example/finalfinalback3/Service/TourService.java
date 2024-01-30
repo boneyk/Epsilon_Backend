@@ -3,6 +3,7 @@ package com.example.finalfinalback3.Service;
 import com.example.finalfinalback3.DTO.TourAddDTO;
 import com.example.finalfinalback3.DTO.TourFavoriteDTO;
 import com.example.finalfinalback3.DTO.TourMainDTO;
+import com.example.finalfinalback3.Entity.DateEntity;
 import com.example.finalfinalback3.Entity.ImageEntity;
 import com.example.finalfinalback3.Entity.TourEntity;
 import com.example.finalfinalback3.Entity.UserEntity;
@@ -41,6 +42,11 @@ public class TourService {
             throw new DataAlreadyExistsException("Такой тур уже существует!");
         }
         return tourRepo.save(modelMapper.map(tour, TourEntity.class));
+    }
+
+    public void deleteTour(TourEntity tour){
+        tour.setDate(null);
+        tourRepo.delete(tour);
     }
 
     public TourEntity saveTour(TourEntity tour){
